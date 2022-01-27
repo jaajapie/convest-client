@@ -1,7 +1,16 @@
+
 import Link from 'next/link'
+
+import Button from '@mui/material/Button';
 import styled from 'styled-components'
 
-const Nav = styled.nav`
+
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import SideBar from './SideBar';
+
+
+const NavDesktop = styled.nav`
     height: 80px;
     background: #000;
     display:flex;
@@ -28,30 +37,51 @@ const NavLeftArea = styled.div`
 
 const NavRightArea = styled.div`
     display:flex;
-    align-items: center;    
+    align-items: center; `
+
+const NavMobile = styled.div`
+    color:#ffff;
+    padding-right: 1rem;
+    padding-left: 1rem;
+    padding-top:1rem;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+   
 `
 
-
 const Navbar = () => {
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
-    <Nav>
-        <NavLeftArea>
+      <div>
+         
+          <NavMobile style={{'display':  isMobile?'flex':'none' }}>
+            <SideBar></SideBar>
             <Link href="/" passHref> 
-                <Logo src="logo/logo-white.png"></Logo>
+              <Logo src="logo/logo-white.png"></Logo>
             </Link>
-            <Link href="/" passHref><StyleLink>Home</StyleLink></Link>
-            <Link href="/" passHref><StyleLink>Member</StyleLink></Link>
-            <Link href="/referral" passHref><StyleLink>Referral</StyleLink></Link>
-            <Link href="/insurance" passHref><StyleLink>Insurance</StyleLink></Link>
-            <Link href="/" passHref><StyleLink>Underwriting</StyleLink></Link>
-            <Link href="/" passHref><StyleLink>Claim</StyleLink></Link>
-            <Link href="/" passHref><StyleLink>Statistic</StyleLink></Link>
-            <Link href="/" passHref><StyleLink>Swap</StyleLink></Link>
-        </NavLeftArea>
-        <NavRightArea>
-            <Link href="/"><StyleLink>ConnectWallet</StyleLink></Link>
-        </NavRightArea>
-    </Nav>
+          </NavMobile>
+          <NavDesktop style={{'display':  isMobile?'none':'flex' }}>
+            <NavLeftArea>
+                <Link href="/" passHref> 
+                    <Logo src="logo/logo-white.png"></Logo>
+                </Link>
+                <Link href="/" passHref><StyleLink>Home</StyleLink></Link>
+                <Link href="/" passHref><StyleLink>Member</StyleLink></Link>
+                <Link href="/referral" passHref><StyleLink>Referral</StyleLink></Link>
+                <Link href="/insurance" passHref><StyleLink>Insurance</StyleLink></Link>
+                <Link href="/" passHref><StyleLink>Underwriting</StyleLink></Link>
+                <Link href="/" passHref><StyleLink>Claim</StyleLink></Link>
+                <Link href="/" passHref><StyleLink>Statistic</StyleLink></Link>
+                <Link href="/" passHref><StyleLink>Swap</StyleLink></Link>
+            </NavLeftArea>
+            <NavRightArea>
+                <Button variant="contained" href="/">ConnectWallet</Button>
+            </NavRightArea>
+        </NavDesktop>
+      </div>
+    
   )
 }
 
