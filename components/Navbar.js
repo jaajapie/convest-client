@@ -1,4 +1,3 @@
-
 import Link from 'next/link'
 
 import Button from '@mui/material/Button';
@@ -8,6 +7,8 @@ import AppBar from '@mui/material/AppBar';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import SideBar from './SideBar';
+import { useMoralis } from "react-moralis";
+
 
 
 const NavDesktop = styled.nav`
@@ -52,6 +53,7 @@ const NavMobile = styled.div`
 const Navbar = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const { authenticate, isAuthenticated, user } = useMoralis();
   return (
       <div>
          <AppBar>
@@ -66,6 +68,7 @@ const Navbar = () => {
                 <Link href="/" passHref> 
                     <Logo src="logo/logo-dark.png"></Logo>
                 </Link>
+                
                 <Link href="/" passHref><StyleLink>Home</StyleLink></Link>
                 <Link href="/" passHref><StyleLink>Member</StyleLink></Link>
                 <Link href="/referral" passHref><StyleLink>Referral</StyleLink></Link>
@@ -76,7 +79,7 @@ const Navbar = () => {
                 <Link href="/" passHref><StyleLink>Swap</StyleLink></Link>
             </NavLeftArea>
             <NavRightArea>
-                <Button variant="contained" href="/">ConnectWallet</Button>
+                <Button variant="contained" onClick={() => authenticate({ onComplete: (res) => {console.log(res); alert("🎉")} })}>ConnectWallet</Button>
             </NavRightArea>
         </NavDesktop>
        </AppBar>
