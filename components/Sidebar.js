@@ -4,7 +4,6 @@ import styled from 'styled-components'
 
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Box from '@mui/material/Box';
@@ -18,12 +17,12 @@ export default function SideBar ()  {
     object-fit: cover;`
 
     const SideBarArea = styled(Box)(({ theme }) => ({
-        backgroundColor: '#151521',
+        backgroundColor: '#fff',
         height: '100vh',
-        color:'#ffff'
+        color:'#151521'
     }));
     const MenuItemArea = styled(ListItem)(({ theme }) => ({
-       borderTop: '1px solid #ffffff14'
+       borderTop: '1px solid #e5e5ee'
     }));
     const MenuItemText = styled(ListItemText)(({ theme }) => ({
         color: '#acacac'
@@ -33,7 +32,7 @@ export default function SideBar ()  {
         justifyContent: 'space-between'
     }));
     const MenuButtonArea = styled(MenuIcon)(({ theme }) => ({
-        border: '1px solid #ffffff14',
+        border: '1px solid #bababe',
         borderRadius: '50%',
         padding: '5px',
         fontSize: '21px',
@@ -50,14 +49,19 @@ export default function SideBar ()  {
           <List>
             <MenuHeadArea>
                 <Link href="/" passHref> 
-                    <Logo src="logo/logo-white.png"></Logo>
+                    <Logo src="logo/logo-dark.png"></Logo>
                 </Link>
                 <CloseIcon onClick={toggleDrawer(anchor, false)}></CloseIcon>
             </MenuHeadArea>
-            {['Home', 'Member', 'Refferal', 'Insurance','Underwriting','Claim','Statistic','Swap'].map((text, index) => (
-              <MenuItemArea button key={text}>
-                <MenuItemText primary={text} />
-              </MenuItemArea>
+            {[{name:'Home',url:'/'},{name:'Member',url:'/'},{name:'Refferal',url:'/referral'}, {name:'Insurance',url:'/'},{name:'Underwriting',url:'/'},{name:'Claim',url:'/'},{name:'Statistic',url:'/'},{name:'Swap',url:'/'}].map((item, index) => (
+              
+                <MenuItemArea button key={item.name}>
+                  <Link href={item.url} passHref> 
+                  <MenuItemText primary={item.name} />
+                  </Link>
+                </MenuItemArea>
+             
+             
             ))}
           </List>
         </SideBarArea>

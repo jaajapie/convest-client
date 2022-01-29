@@ -13,18 +13,20 @@ const FooterSection = styled('div')(({ theme }) => ({
     display:'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#24243557',
+    backgroundColor: '#13131d',
     borderTop: '1px solid #ffffff14',
     paddingRight: '3rem',
     paddingLeft: '3rem',
     fontSize: '16px',
     fontWeight: 400,
     color:'#acacac',
+    width:'100%',
     [theme.breakpoints.down('sm')]: {
         flexDirection: 'column',
         height: '20vh',
         paddingRight: '0px',
-        paddingLeft: '0px'
+        paddingLeft: '0px',
+        paddingBottom: '3rem',
     }
   }));
 
@@ -42,16 +44,14 @@ const FooterRightArea = styled('div')(({ theme }) => ({
     display:'flex',
     alignItems: 'center',
     justifyConten: 'space-around',
-    [theme.breakpoints.down('sm')]: {
-        // flexDirection: 'column',
-    }
+    
 }));
 
 const FooterLinkLeftArea = styled('div')(({ theme }) => ({
-        marginLeft:'30px',
-        [theme.breakpoints.down('sm')]: {
-            marginLeft: '0px'
-        }
+    marginLeft:'30px',
+    [theme.breakpoints.down('sm')]: {
+        marginLeft: '0px'
+    }
 }));
 
 const FooterSocial = styles.a`

@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import Button from '@mui/material/Button';
 import styled from 'styled-components'
-
+import AppBar from '@mui/material/AppBar';
 
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -12,11 +12,11 @@ import SideBar from './SideBar';
 
 const NavDesktop = styled.nav`
     height: 80px;
-    background: #000;
+    background: #ffff;
     display:flex;
     justify-content: space-between;
     align-items: center;
-    color:#ffff;
+    color:#000;
     padding-right: 3rem;
     padding-left: 3rem;
     width: 100%;
@@ -40,13 +40,12 @@ const NavRightArea = styled.div`
     align-items: center; `
 
 const NavMobile = styled.div`
-    color:#ffff;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    padding-top:1rem;
+    color:#000;
+    padding: 1rem;
     display:flex;
     justify-content: space-between;
     align-items: center;
+    background: #fff;
    
 `
 
@@ -55,17 +54,17 @@ const Navbar = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   return (
       <div>
-         
-          <NavMobile style={{'display':  isMobile?'flex':'none' }}>
-            <SideBar></SideBar>
-            <Link href="/" passHref> 
-              <Logo src="logo/logo-white.png"></Logo>
-            </Link>
-          </NavMobile>
+         <AppBar>
+            <NavMobile style={{'display':  isMobile?'flex':'none' }}>
+                <SideBar></SideBar>
+                <Link href="/" passHref> 
+                <Logo src="logo/logo-dark.png"></Logo>
+                </Link>
+            </NavMobile>
           <NavDesktop style={{'display':  isMobile?'none':'flex' }}>
             <NavLeftArea>
                 <Link href="/" passHref> 
-                    <Logo src="logo/logo-white.png"></Logo>
+                    <Logo src="logo/logo-dark.png"></Logo>
                 </Link>
                 <Link href="/" passHref><StyleLink>Home</StyleLink></Link>
                 <Link href="/" passHref><StyleLink>Member</StyleLink></Link>
@@ -80,6 +79,8 @@ const Navbar = () => {
                 <Button variant="contained" href="/">ConnectWallet</Button>
             </NavRightArea>
         </NavDesktop>
+       </AppBar>
+          
       </div>
     
   )

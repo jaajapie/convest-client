@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
 const Hero = styled('div')(({ theme }) => ({
-  height: '80vh',
+  height: '100vh',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-around',
@@ -24,7 +24,7 @@ const HeroLeftArea = styled('div')(({ theme }) => ({
   }
 }));
 const HeroRightArea = styled('div')(({ theme }) => ({
-  width: '40%',
+  width: '35%',
   padding:'1.5rem',
   [theme.breakpoints.down('sm')]: {
     width: '100%',
@@ -33,9 +33,9 @@ const HeroRightArea = styled('div')(({ theme }) => ({
 const HeroHeaderText = styled('h2')(({ theme }) => ({
   fontSize: '60px',
   fontWeight: 400,
-  color:'#ffffff',
+  color:'#000',
   [theme.breakpoints.down('sm')]: {
-    fontSize: '30px',
+    fontSize: '45px',
     fontWeight: 400,
   }
 }));
@@ -43,7 +43,7 @@ const HeroSubHeadText = styled('p')(({ theme }) => ({
   fontSize: '22px',
   color:'#acacac',
   [theme.breakpoints.down('sm')]: {
-    fontSize: '16px',
+    fontSize: '20px',
     color:'#acacac',
   }
 }));
@@ -75,6 +75,12 @@ const HeroImage = styled('img')(({ theme }) => ({
   verticalAlign: 'middle'
 }));
 
+const HeroButtonArea = styled(Stack)(({ theme }) => ({
+  
+  [theme.breakpoints.down('sm')]: {
+    justifyContent:'center'
+  }
+}));
 
 export default function Home() {
   return (
@@ -117,10 +123,10 @@ export default function Home() {
       <HeroLeftArea>
         <HeroHeaderText>Discover Digital Art, Collect and Sell Your Specific NFTs.</HeroHeaderText>
         <HeroSubHeadText>Partner with one of the world’s largest retailers to showcase your brand and products.</HeroSubHeadText>
-        <Stack spacing={2} direction="row">
+        <HeroButtonArea spacing={2} direction="row">
           <HeroPrimaryButton variant="contained" size="large">Get Started</HeroPrimaryButton>
           <HeroSecondaryButton variant="contained" size="large">Create</HeroSecondaryButton>
-        </Stack>
+        </HeroButtonArea>
       </HeroLeftArea>
       <HeroRightArea>
         <HeroImage src="landing/hero.png"></HeroImage>
