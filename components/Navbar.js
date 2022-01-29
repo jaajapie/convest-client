@@ -1,5 +1,5 @@
 import Link from 'next/link'
-
+import * as React from 'react';
 import Button from '@mui/material/Button';
 import styled from 'styled-components'
 import AppBar from '@mui/material/AppBar';
@@ -49,6 +49,18 @@ const NavMobile = styled.div`
     background: #fff;
    
 `
+const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
+    const { authenticate, isAuthenticated, user } = useMoralis()
+    if (!isAuthenticated) {
+        return (
+            <Button variant="contained" onClick={() => authenticate({ onComplete: (res) => {alert("🎉")} })}>ConnectWallet</Button>
+        );
+    } else{
+        return (
+            <Button variant="contained" >{user.get("username")}</Button>
+        );
+    }
+})
 
 const Navbar = () => {
     const theme = useTheme();
@@ -79,7 +91,7 @@ const Navbar = () => {
                 <Link href="/" passHref><StyleLink>Swap</StyleLink></Link>
             </NavLeftArea>
             <NavRightArea>
-                <Button variant="contained" onClick={() => authenticate({ onComplete: (res) => {console.log(res); alert("🎉")} })}>ConnectWallet</Button>
+                <IsAuthenRender></IsAuthenRender>
             </NavRightArea>
         </NavDesktop>
        </AppBar>
