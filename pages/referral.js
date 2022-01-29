@@ -42,16 +42,16 @@ const RefferalArea = styled('div')(({ theme }) => ({
 const RefferalHeadArea = styled('div')(({ theme }) => ({
     height: '350px',
     width:'100%',
-    background: '#ffff',
     display:'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    color:'#000',
+    color:'#ffff',
     paddingRight: '5rem',
     paddingLeft: '5rem',
     transition: '0.3s',
     borderBottom: '1px solid #ffffff14',
-    backgroundImage: 'url("refferal/header-bg.jpg")',
+    background: 'linear-gradient(0deg ,#37609d,#081587)',
+    // backgroundImage: 'url("refferal/header-bg.jpg")',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       paddingRight: '1rem',
@@ -76,7 +76,7 @@ const RefferalHeadRightArea = styled('div')(({ theme }) => ({
 }));
 
 const RefferalHeaderText = styled('h2')(({ theme }) => ({
-  fontSize: '32px',
+  fontSize: '40px',
   fontWeight: 700,
   [theme.breakpoints.down('sm')]: {
     fontSize: '30px',
@@ -86,7 +86,7 @@ const RefferalHeaderText = styled('h2')(({ theme }) => ({
 
 const RefferalHeaderHightlightText = styled('span')(({ theme }) => ({
   backgroundImage: 'linear-gradient(90deg,#fad14a,#f5a624)',
-  fontSize: '28px',
+  fontSize: '40px',
   fontWeight: 700,
   borderRadius: '8px',
   padding: '4px 8px 4px 8px',
@@ -156,12 +156,12 @@ const RefferalContentArea = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    color: '#ffff',
+    color: '#000',
     paddingRight: '3rem',
     paddingLeft: '3rem',
     transition: '0.3s',
     borderBottom: '1px solid #ffffff14',
-    backgroundColor: '#13131d',
+    backgroundColor: '#ffff',
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',
       paddingRight: '1rem',
@@ -347,19 +347,9 @@ function EnhancedTableHead(props) {
   return (
     <TableHead >
       <TableRow >
-        <TableCell padding="checkbox" style={{ borderColor: '#ffff' }}>
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              'aria-label': 'select all desserts',
-            }}
-          />
-        </TableCell>
+       
         {headCells.map((headCell) => (
-          <TableCell style={{ color: '#ffff' }}
+          <TableCell
             key={headCell.id}
             align={'left'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
@@ -545,8 +535,8 @@ export default function Referral() {
               <RefferalClaimButton size="large" variant="contained" startIcon={<AccountBalanceWalletIcon />}>  Get NECT</RefferalClaimButton>
             </RefferalTopContentRightArea>
           </RefferalTopContentArea>
-          <Box sx={{ width: '100%',background: '#13131d'}}>
-            <Paper sx={{ width: '100%', mb: 2,padding: '0 20px 0 20px', background: '#24243557',borderRadius: '5px', border: '1px solid #ffffff14' }}>
+          <Box sx={{ width: '100%'}}>
+            <Paper sx={{ width: '100%', mb: 2,padding: '0 20px 0 20px',borderRadius: '5px', border: '1px solid #ffffff14' }}>
               <EnhancedTableToolbar numSelected={selected.length} />
               <TableContainer>
                 <Table
@@ -574,22 +564,12 @@ export default function Referral() {
                           <TableRow 
                             hover
                             onClick={(event) => handleClick(event, row.no)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
                             tabIndex={-1}
                             key={row.no}
                             selected={isItemSelected}
                           >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                color="primary"
-                                checked={isItemSelected}
-                                inputProps={{
-                                  'aria-labelledby': labelId,
-                                }}
-                              />
-                            </TableCell>
-                            <TableCell style={{ color: '#acacac' }}
+                           
+                            <TableCell 
                               component="th"
                               id={labelId}
                               scope="row"
@@ -597,17 +577,17 @@ export default function Referral() {
                                {row.no}
                              
                             </TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>
+                            <TableCell align="left" >
                               <Stack direction="row" spacing={2} style={{display:'flex',alignItems:'center'}}>
                                   <Avatar style={{marginRight:'10px',alignItems:'center'}} alt={row.protocol} src="portfolio/portfolio-05.jpg" />
                                   {row.protocol}
                               </Stack>
                               </TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>{row.adress}</TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>{row.timePurchased}</TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>{row.tx}</TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>{row.reward}</TableCell>
-                            <TableCell align="left" style={{ color: '#acacac' }}>{row.status}</TableCell>
+                            <TableCell align="left" >{row.adress}</TableCell>
+                            <TableCell align="left" >{row.timePurchased}</TableCell>
+                            <TableCell align="left" >{row.tx}</TableCell>
+                            <TableCell align="left" >{row.reward}</TableCell>
+                            <TableCell align="left" >{row.status}</TableCell>
                           </TableRow>
                         );
                       })}
