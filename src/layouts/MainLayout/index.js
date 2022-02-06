@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Footer from "./Footer";
-import Navbar from "./Navbar";
+import Topbar from "./Topbar";
 
 import PropTypes from 'prop-types';
 import Toolbar from '@mui/material/Toolbar';
@@ -52,11 +52,11 @@ ScrollTop.propTypes = {
 };
 
 
-export default function Layout (props)  {
+export default function MainLayout (props)  {
   const { children, window } = props;
   return (
     <div>
-        <Navbar></Navbar>
+        <Topbar></Topbar>
         <React.Fragment>
           <Toolbar id="back-to-top-anchor" />
           {children}

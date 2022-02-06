@@ -1,9 +1,13 @@
-import Header from '../components/Header'
+import MainLayout from '../src/layouts/MainLayout'
+import Header from '../src/components/Header'
+import RefferalView from '../src/views/Refferal'
 
 export default function insurance ()  {
   return <>
-     <Header title={`CONVEST FINANCE: Insurance`}></Header>
-      <h1>Insurance</h1>
+    <MainLayout>
+      <Header title={`CONVEST FINANCE: Referral`}></Header>
+      <RefferalView></RefferalView>
+    </MainLayout>
       
   </>;
 };

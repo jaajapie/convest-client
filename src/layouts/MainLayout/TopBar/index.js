@@ -6,7 +6,7 @@ import AppBar from '@mui/material/AppBar';
 
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import SideBar from './SideBar';
+import SideBar from '../SideBar';
 import { useMoralis } from "react-moralis";
 
 
@@ -62,7 +62,7 @@ const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
     }
 })
 
-const Navbar = () => {
+const Topbar = () => {
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const { authenticate, isAuthenticated, user } = useMoralis();
@@ -101,4 +101,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Topbar
