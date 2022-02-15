@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useGetProvider from '../../../hooks/useGetProvider'
+
 import useGetInsurance from '../../../hooks/useGetInsurance'
 
 import ProviderDetail from './ProviderDetail'
+
+
 
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
@@ -63,15 +66,17 @@ function a11yProps(index) {
 }
 
 const CreateTabProvider =  ()  => {
+ 
+  
   const providerData =  useGetProvider();
   const insuranceData =  useGetInsurance();
-
+  
   const [value, setValue] = React.useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  if(providerData != undefined && insuranceData != undefined){
+ 
+  if(providerData != undefined && insuranceData != undefined && value != undefined) {
     
     return (
       <>
@@ -89,7 +94,7 @@ const CreateTabProvider =  ()  => {
             <Grid container spacing={2}>
               {insuranceData.map((insurance,indexInsurance) => (
                 <Grid key={insurance.id} item xs={12} md={3}>
-                  <ProviderDetail  name={insurance.name} imgUrl={insurance.logoUrl}></ProviderDetail>
+                  <ProviderDetail Id={value??0} name={insurance.name} imgUrl={insurance.logoUrl}></ProviderDetail>
                 </Grid>
                   
               ))}

@@ -2,6 +2,8 @@ import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import Link from 'next/link'
+import useGetProviderDetailApi from '../../../hooks/useGetProviderDetailApi'
 
 const ProviderCardArea = styled('div')(({ theme }) => ({
     paddingLeft: '10px',
@@ -89,10 +91,15 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const ProviderDetail = ({name,imgUrl}) => {
+const ProviderDetail = ({Id,name,imgUrl}) => {
+ const providerDetail = useGetProviderDetailApi(Id);
+// console.log('providerDetail::')
+// console.log(providerDetail)
+  const detailUrl = "/mining?name="+name
   return (
-    <ProviderCardArea>
-        <ProviderCardInnerArea>
+    <ProviderCardArea >
+      <Link href={detailUrl} passHref>
+      <ProviderCardInnerArea>
           <ProviderDetailTopArea>
             <InsuranceLogo src={imgUrl} />
             <InsuranceName>{name}</InsuranceName>
@@ -113,6 +120,8 @@ const ProviderDetail = ({name,imgUrl}) => {
             <Button variant="contained" size="large">Swap</Button>
           </ProviderDetailFooterArea>
         </ProviderCardInnerArea>
+      </Link>
+       
     </ProviderCardArea>
     
   );

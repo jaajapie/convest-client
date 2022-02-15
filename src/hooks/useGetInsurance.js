@@ -1,6 +1,6 @@
 import { useMoralisQuery  } from "react-moralis";
 
-const useGetInsurance =  ()=>{
+const useGetInsurance =  (id)=>{
   
     let insuranceData = []
     const { data, error } =  useMoralisQuery("Insurance");
@@ -13,7 +13,11 @@ const useGetInsurance =  ()=>{
         jsonData.forEach(function(insurance,index){
             if(insurance != undefined){
                 let rowData = insurance.attributes;
-                insuranceData.push({id:insurance.id, name: rowData.name, logoUrl: rowData.logo_url})
+                if(id != undefined && id == insurance.id){
+                    insuranceData.push({id:insurance.id, name: rowData.name, logoUrl: rowData.logo_url})
+                } else if(id == undefined){
+                    insuranceData.push({id:insurance.id, name: rowData.name, logoUrl: rowData.logo_url})
+                }
             }
         });
         
@@ -24,3 +28,4 @@ const useGetInsurance =  ()=>{
 }
 
 export default useGetInsurance;
+

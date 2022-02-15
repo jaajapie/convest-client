@@ -6,6 +6,7 @@ import '../styles/particles.css'
 import { MoralisProvider } from "react-moralis"
 
 function MyApp({ Component, pageProps }) {
+  
   return (
     <MoralisProvider appId={moralisConfig.appId} serverUrl={moralisConfig.serverurl}>
       <Component {...pageProps} />
