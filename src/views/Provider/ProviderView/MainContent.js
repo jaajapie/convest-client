@@ -94,7 +94,7 @@ const CreateTabProvider =  ()  => {
             <Grid container spacing={2}>
               {insuranceData.map((insurance,indexInsurance) => (
                 <Grid key={insurance.id} item xs={12} md={3}>
-                  <ProviderDetail Id={value??0} name={insurance.name} imgUrl={insurance.logoUrl}></ProviderDetail>
+                  <ProviderDetail Id={value??0} name={insurance.name} imgUrl={insurance.logoUrl} providerName={provider.productType}></ProviderDetail>
                 </Grid>
                   
               ))}

@@ -26,16 +26,23 @@ const FilterArea = styled('div')(({ theme }) => ({
     marginTop: '2%',
     width:'100%',
     display: 'flex',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: '16px'
+    marginBottom: '16px',
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+    }
 }));
 const FilterRightArea = styled('Box')(({ theme }) => ({
    
     width:'30%',
     display: 'flex',
     flexDirection: 'column',
-    marginBottom: '16px'
+    marginBottom: '16px',
+    [theme.breakpoints.down('sm')]: {
+        width:'100%',
+    }
 }));
 const FilterRightControlArea = styled('Box')(({ theme }) => ({
    
@@ -119,7 +126,6 @@ const TopSection = () => {
                     </FormControl>
                 </FilterRightControlArea>
                 <FilterRightLabelArea>
-                <label>Underwriter, Referral, Capital Reserve</label>
                 </FilterRightLabelArea>
                 </FilterRightArea>
         </FilterArea>

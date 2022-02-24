@@ -85,7 +85,7 @@ const Topbar = () => {
                 <Link href="/" passHref><StyleLink>Member</StyleLink></Link>
                 <Link href="/referral" passHref><StyleLink>Referral</StyleLink></Link>
                 <Link href="/insurance" passHref><StyleLink>Insurance</StyleLink></Link>
-                <Link href="/" passHref><StyleLink>Underwriting</StyleLink></Link>
+                <Link href="/provider" passHref><StyleLink>Provider</StyleLink></Link>
                 <Link href="/" passHref><StyleLink>Claim</StyleLink></Link>
                 <Link href="/" passHref><StyleLink>Statistic</StyleLink></Link>
                 <Link href="/" passHref><StyleLink>Swap</StyleLink></Link>

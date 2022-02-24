@@ -30,14 +30,24 @@ const ProviderDetailTopArea = styled('div')(({ theme }) => ({
   position: 'relative',
   display: 'flex',
   flexDirection: 'row',
-  alignItems: 'center'
+  alignItems: 'center',
+  position: 'relative',
+}));
+const ProviderNameBox = styled(Box)(({ theme }) => ({
+  position: 'absolute',
+  right: '0px',
+  top: '-10px',
+  padding:'5px 20px',
+  backgroundColor: '#e8f7f0',
+  color: '#1db371',
+  border: '1px solid #1db371',
+  borderRadius: '10px',
 }));
 const ProviderDetailContentArea = styled('div')(({ theme }) => ({
   position: 'relative',
-  height: '80px',
+  height: '105px',
   display: 'flex',
   flexDirection: 'column',
-  marginTop: '10px',
   [theme.breakpoints.down('sm')]: {
    
   }
@@ -66,12 +76,36 @@ const InsuranceLogo = styled('img')(({ theme }) => ({
 const InsuranceName = styled('h4')(({ theme }) => ({
   fontSize: '18px',
   fontWeight: '700',
-  marginLeft: '10px'
+  marginLeft: '10px',
+  lineHeight: '1px'
+}));
+const SmallDetailName = styled('h5')(({ theme }) => ({
+  fontSize: '14px',
+  fontWeight: '400',
+  marginLeft: '10px',
+  lineHeight: '1px'
 }));
 const CurrentText = styled('label')(({ theme }) => ({
   fontSize: '14px',
   fontWeight: '400',
   color: '#1db371'
+}));
+const BoxMIToken = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'flex-end',
+  
+}));
+const BoxMITokenValueText = styled('h2')(({ theme }) => ({
+  fontSize: '38px',
+  fontWeight: '700',
+  lineHeight: '1px'
+}));
+const BoxMITokenUnitText = styled('h5')(({ theme }) => ({
+  fontSize: '18px',
+  fontWeight: '400',
+  lineHeight: '1px'
 }));
 const MaxValueText = styled('span')(({ theme }) => ({
   fontSize: '14px',
@@ -91,36 +125,48 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const ProviderDetail = ({Id,name,imgUrl}) => {
- const providerDetail = useGetProviderDetailApi(Id);
+const ProviderDetail = ({Id,name,imgUrl,providerName}) => {
+ //const providerDetail = useGetProviderDetailApi(Id);
 // console.log('providerDetail::')
 // console.log(providerDetail)
   const detailUrl = "/mining?name="+name
   return (
     <ProviderCardArea >
-      <Link href={detailUrl} passHref>
+      
       <ProviderCardInnerArea>
+        <Link href={detailUrl} passHref>
           <ProviderDetailTopArea>
             <InsuranceLogo src={imgUrl} />
-            <InsuranceName>{name}</InsuranceName>
-          
+            <Box>
+              <InsuranceName>{name}</InsuranceName>
+              <SmallDetailName>0xoajsdaklsfhaassfasf</SmallDetailName>
+            </Box>
+            <ProviderNameBox>
+              {providerName}
+            </ProviderNameBox>
           </ProviderDetailTopArea>
+          
+          </Link>
           <ProviderDetailContentArea>
+            <BoxMIToken>
+              <BoxMITokenValueText>15$ </BoxMITokenValueText>
+              <BoxMITokenUnitText> / MI Token</BoxMITokenUnitText>
+            </BoxMIToken>
             <Box sx={{ flexGrow: 1 }}>
               <BorderLinearProgress variant="determinate" value={15} />
             </Box>
             <ProviderDetailContentValueArea>
               <CurrentText>{182,161.5682}
-                <MaxValueText> /{'10,000,000.0000'}</MaxValueText>
+                <MaxValueText> /{'10,000,000.0000'} MI Tokens</MaxValueText>
               </CurrentText>
             </ProviderDetailContentValueArea>
           </ProviderDetailContentArea>
           <ProviderDetailFooterArea>
             <Button variant="contained" size="large">Stake</Button>
-            <Button variant="contained" size="large">Swap</Button>
+            <Button variant="contained" size="large" href="/swap">Swap</Button>
           </ProviderDetailFooterArea>
         </ProviderCardInnerArea>
-      </Link>
+    
        
     </ProviderCardArea>
     

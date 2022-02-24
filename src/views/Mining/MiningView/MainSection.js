@@ -44,6 +44,10 @@ const ControlArea = styled('div')(({ theme }) => ({
   justifyContent: 'space-evenly',
   flexDirection: 'row',
   marginBottom: '16px',
+  [theme.breakpoints.down('sm')]: {
+    flexDirection: 'column',
+    width:'100%'
+}
 }));
 const MainSection = (props) => {
   const {insuranceId} = props
