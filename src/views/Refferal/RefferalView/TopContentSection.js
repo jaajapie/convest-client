@@ -1,29 +1,29 @@
-import { styled } from '@mui/material/styles';
-import styles from 'styled-components'
+import { styled } from "@mui/material/styles";
+import styles from "styled-components";
 
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import AccountBalanceWalletIcon from "@mui/icons-material/AccountBalanceWallet";
 
+const RefferalTopContentArea = styled("div")(({ theme }) => ({
+  height: "250px",
+  width: "90%",
+  position: "absolute",
+  top: "-80px",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  borderBottom: "1px solid #ffffff14",
+  backgroundColor: "#fff",
+  border: "1px solid #e5e6ea",
+  borderRadius: "20px",
+  padding: "20px 0 20px 0",
 
-const RefferalTopContentArea = styled('div')(({ theme }) => ({
-  height: '250px',
-  width:'90%',
-  position: 'absolute',
-  top: '-80px',
-  display:'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderBottom: '1px solid #ffffff14',
-  backgroundColor: '#fff',
-  border: '1px solid #e5e6ea',
-  borderRadius: '20px',
-  padding: '20px 0 20px 0',
-  [theme.breakpoints.down('sm')]: {
-        width:'100%',
-        position: 'relative',
-        top: 'unset'
-  }
+  [theme.breakpoints.down("sm")]: {
+    width: "100%",
+    position: "relative",
+    top: "unset",
+  },
 }));
 
 const RefferalTopContentLeftArea = styles.div`
@@ -42,48 +42,61 @@ const RefferalTopContentRightArea = styles.div`
     align-items: center;
     flex-direction: column`;
 
-const RefferalClaimHeadText = styled('h4')(({ theme }) => ({
-      fontWeight: 600,
-      marginBottom: '10px',
-      lineHeight: 1.25,
-      fontSize:'2rem',
-      [theme.breakpoints.down('sm')]: {
-        fontSize:'1.5rem',
-      }
+const RefferalClaimHeadText = styled("h4")(({ theme }) => ({
+  fontWeight: 600,
+  marginBottom: "10px",
+  lineHeight: 1.25,
+  fontSize: "2rem",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "1.5rem",
+  },
 }));
-    
-const RefferalClaimSubHeadText = styled('p')(({ theme }) => ({
-      fontSize: '20px',
-      fontWeight: 600,
-      color:'#acacac',
-      [theme.breakpoints.down('sm')]: {
-        fontSize:'16px',
-      }
+
+const RefferalClaimSubHeadText = styled("p")(({ theme }) => ({
+  fontSize: "20px",
+  fontWeight: 600,
+  color: "#acacac",
+  [theme.breakpoints.down("sm")]: {
+    fontSize: "16px",
+  },
 }));
-    
+
 const RefferalClaimButton = styled(Button)(({ theme }) => ({
-      padding: '8px 8px',
-      textTransform: 'none',
-      
+  padding: "8px 8px",
+  textTransform: "none",
 }));
 
 const TopContentSection = () => {
   return (
     <RefferalTopContentArea>
       <RefferalTopContentLeftArea>
-        <RefferalClaimHeadText >0.547 NECT</RefferalClaimHeadText>
+        <RefferalClaimHeadText>13 USD</RefferalClaimHeadText>
         <RefferalClaimSubHeadText>Referral Reward</RefferalClaimSubHeadText>
-        <RefferalClaimButton size="large" variant="contained" startIcon={<AccountBalanceWalletIcon />}> Claim Reward</RefferalClaimButton>
+        <RefferalClaimButton
+          size="large"
+          variant="contained"
+          startIcon={<AccountBalanceWalletIcon />}
+        >
+          {" "}
+          Claim Reward
+        </RefferalClaimButton>
       </RefferalTopContentLeftArea>
       <Divider orientation="vertical" flexItem></Divider>
       <RefferalTopContentRightArea>
-        <RefferalClaimHeadText >187 USD</RefferalClaimHeadText>
-        <RefferalClaimSubHeadText>NECT Market Price</RefferalClaimSubHeadText>
-        <RefferalClaimButton size="large" variant="contained" startIcon={<AccountBalanceWalletIcon />}>  Get NECT</RefferalClaimButton>
+        <RefferalClaimHeadText>187 USD</RefferalClaimHeadText>
+        <RefferalClaimSubHeadText>Staking Value </RefferalClaimSubHeadText>
+        <RefferalClaimButton
+          size="large"
+          variant="contained"
+          href="/provider"
+          startIcon={<AccountBalanceWalletIcon />}
+        >
+          {" "}
+          Become Referrer
+        </RefferalClaimButton>
       </RefferalTopContentRightArea>
     </RefferalTopContentArea>
-  )
-   
+  );
 };
 
 export default TopContentSection;
