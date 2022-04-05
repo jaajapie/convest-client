@@ -153,7 +153,7 @@ const MainSection = () => {
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
             <ApplyLeftArea>
-              <H5Head>Bridge</H5Head>
+              {/* <H5Head>Bridge</H5Head>
               <p>
                 <LinkText href="" passHref>
                   My Transactions
@@ -178,7 +178,7 @@ const MainSection = () => {
                 provide the correct wallet address to receive the tokens. We
                 will not be responsible for token loss due to the wrong wallet
                 address provided.To get started, please read User Guide.
-              </DetailText>
+              </DetailText> */}
             </ApplyLeftArea>
           </Grid>
           <Grid item xs={12} md={6}>
