@@ -123,16 +123,21 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const ProviderDetail = ({ Id, name, imgUrl, providerName, providerId }) => {
-  //const providerDetail = useGetProviderDetailApi(Id);
-  // console.log('providerDetail::')
-  // console.log(providerDetail)
+const ProviderDetail = ({
+  Id,
+  name,
+  percentPower,
+  providerName,
+  providerId,
+  currentPower,
+  maxPower,
+}) => {
   const detailUrl = "/mining?id=" + Id + "&providerId=" + providerId;
+
   return (
     <ProviderCardArea>
       <ProviderCardInnerArea>
         <ProviderDetailTopArea>
-          {/* <InsuranceLogo src={imgUrl} /> */}
           <Box>
             <InsuranceName>{name}</InsuranceName>
             <SmallDetailName>{Id}</SmallDetailName>
@@ -146,12 +151,12 @@ const ProviderDetail = ({ Id, name, imgUrl, providerName, providerId }) => {
             <BoxMITokenUnitText> / MI Token</BoxMITokenUnitText>
           </BoxMIToken>
           <Box sx={{ flexGrow: 1 }}>
-            <BorderLinearProgress variant="determinate" value={15} />
+            <BorderLinearProgress variant="determinate" value={percentPower} />
           </Box>
           <ProviderDetailContentValueArea>
             <CurrentText>
-              {(182, 161.5682)}
-              <MaxValueText> /{"10,000,000.0000"} MI Tokens</MaxValueText>
+              {currentPower}
+              <MaxValueText> /{maxPower} MI Tokens</MaxValueText>
             </CurrentText>
           </ProviderDetailContentValueArea>
         </ProviderDetailContentArea>

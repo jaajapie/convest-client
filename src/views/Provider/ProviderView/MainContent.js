@@ -58,6 +58,34 @@ function TabPanel(props) {
   );
 }
 
+const CreateProviderTabDetail = (provider) => {
+  const insuranceDataDetail = useGetInsurance(
+    undefined,
+    provider.provider.providerValue
+  );
+  const modLength = 12 / insuranceDataDetail.length;
+  const insuranceCountGrid = insuranceDataDetail.length <= 3 ? modLength : 3;
+
+  return (
+    <Grid container spacing={2}>
+      {insuranceDataDetail?.map((insurance, indexInsurance) => (
+        <Grid key={insurance.id} item xs={12} md={insuranceCountGrid}>
+          <ProviderDetail
+            Id={insurance.contractAddress}
+            name={insurance.name}
+            imgUrl={insurance.logoUrl}
+            providerName={provider.provider.productType}
+            providerId={provider.provider.providerValue}
+            currentPower={insurance.currentPower}
+            maxPower={insurance.maxPower}
+            percentPower={insurance.percentPower}
+          ></ProviderDetail>
+        </Grid>
+      ))}
+    </Grid>
+  );
+};
+
 TabPanel.propTypes = {
   children: PropTypes.node,
   index: PropTypes.number.isRequired,
@@ -73,64 +101,54 @@ function a11yProps(index) {
 
 const CreateTabProvider = () => {
   const providerData = useGetProvider();
-  const insuranceData = useGetInsurance();
 
   const [value, setValue] = React.useState(1);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   //Mui-disabled
-  if (
-    providerData != undefined &&
-    insuranceData != undefined &&
-    value != undefined
-  ) {
-    return (
-      <>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-        >
-          {providerData.map((provider, index) => (
-            <TabsList
-              disabled={provider.disabledProp}
-              key={index}
-              label={provider.productType}
-              {...a11yProps({ index })}
-            />
-          ))}
-        </Tabs>
 
-        {providerData.map((provider, panelIndex) => (
-          <TabPanel key={panelIndex} value={value} index={panelIndex}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Grid container spacing={2}>
-                {insuranceData.map((insurance, indexInsurance) => (
-                  <Grid key={insurance.id} item xs={12} md={3}>
-                    <ProviderDetail
-                      Id={insurance.contractAddress}
-                      name={insurance.name}
-                      imgUrl={insurance.logoUrl}
-                      providerName={provider.productType}
-                      providerId={provider.id}
-                    ></ProviderDetail>
-                  </Grid>
-                ))}
-              </Grid>
-            </Box>
-          </TabPanel>
+  return (
+    <>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="basic tabs example"
+      >
+        {providerData?.map((provider, index) => (
+          <TabsList
+            disabled={provider.disabledProp}
+            key={index}
+            label={provider.productType}
+            {...a11yProps({ index })}
+          />
         ))}
-      </>
-    );
-  } else {
-    return (
-      <>
-        <p>No data</p>
-      </>
-    );
-  }
+      </Tabs>
+
+      {providerData.map((provider, panelIndex) => (
+        <TabPanel key={panelIndex} value={value} index={panelIndex}>
+          <Box sx={{ flexGrow: 1 }}>
+            <CreateProviderTabDetail
+              provider={provider}
+            ></CreateProviderTabDetail>
+            {/* {insuranceData?.map((insurance, indexInsurance) => (
+                <Grid key={insurance.id} item xs={12} md={insuranceCountGrid}>
+                  <ProviderDetail
+                    Id={insurance.contractAddress}
+                    name={insurance.name}
+                    imgUrl={insurance.logoUrl}
+                    providerName={provider.productType}
+                    providerId={provider.id}
+                  ></ProviderDetail>
+                </Grid>
+              ))} */}
+          </Box>
+        </TabPanel>
+      ))}
+    </>
+  );
 };
+
 const MainContent = () => {
   return (
     <ProviderArea>

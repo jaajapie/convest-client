@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -131,6 +131,7 @@ export default function MainSection() {
     totalPolicySoldValue: "584,255 USD",
     cARRadio: "527 %",
   });
+
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {

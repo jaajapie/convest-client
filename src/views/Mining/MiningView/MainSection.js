@@ -52,11 +52,11 @@ const ControlArea = styled("div")(({ theme }) => ({
 }));
 const MainSection = (props) => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, providerId } = router.query;
   const idParam = id == undefined ? "-" : id;
 
   const { insuranceId } = props;
-  const insuranceData = useGetInsurance(idParam);
+  const insuranceData = useGetInsurance(idParam, providerId);
 
   const stakeData = [];
   stakeData.push({

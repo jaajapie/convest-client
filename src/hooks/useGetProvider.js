@@ -1,11 +1,5 @@
-import { useMoralisQuery } from "react-moralis";
-
 const useGetProvider = () => {
   let providerData = [];
-  const { data, error } = useMoralisQuery("Provider");
-  if (error != undefined) {
-    return error;
-  }
 
   providerData.push({
     id: 0,
@@ -13,6 +7,7 @@ const useGetProvider = () => {
     contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114151",
     value: 0,
     disabledProp: "disabled",
+    providerValue: "ServiceProvider",
   });
   providerData.push({
     id: 1,
@@ -20,6 +15,7 @@ const useGetProvider = () => {
     contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114151",
     value: 1,
     disabledProp: "",
+    providerValue: "Referral",
   });
   providerData.push({
     id: 2,
@@ -27,6 +23,7 @@ const useGetProvider = () => {
     contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114152",
     value: 2,
     disabledProp: "",
+    providerValue: "ClaimAssessors",
   });
   providerData.push({
     id: 3,
@@ -34,6 +31,7 @@ const useGetProvider = () => {
     contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114153",
     value: 3,
     disabledProp: "",
+    providerValue: "UnderWriter",
   });
   providerData.push({
     id: 4,
@@ -41,6 +39,7 @@ const useGetProvider = () => {
     contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114154",
     value: 4,
     disabledProp: "",
+    providerValue: "CapitalReserve",
   });
   //   const jsonData = eval(data);
   //   if (jsonData != undefined && jsonData[0] != undefined) {

@@ -1,70 +1,57 @@
-import { useMoralisQuery } from "react-moralis";
+import axios from "axios";
+import { useState, useEffect } from "react";
 
-const useGetInsurance = (id) => {
-  let insuranceData = [];
-  const { data, error } = useMoralisQuery("Insurance");
-  if (error != undefined) {
-    return error;
-  }
+const useGetInsurance = (id, providerValue) => {
+  const [insuranceData, setInsuranceData] = useState([]);
 
-  insuranceData.push({
-    id: 1,
-    name: "Hospital Benefit V1",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114151",
-  });
-  insuranceData.push({
-    id: 1,
-    name: "Critical Illness V1 ",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114152",
-  });
-  insuranceData.push({
-    id: 1,
-    name: "Hospital Benefit V2 ",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114153",
-  });
-  insuranceData.push({
-    id: 1,
-    name: "Critical Illness V2 ",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114154",
-  });
-  insuranceData.push({
-    id: 1,
-    name: "Hospital Benefit V3 ",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114155",
-  });
-  insuranceData.push({
-    id: 1,
-    name: "Critical Illness V3 ",
-    logoUrl: "",
-    contractAddress: "0x6D764D593525dBb88C7736e5b6E2CE6260F3114156",
-  });
+  useEffect(() => {
+    const funcGetInsurance = async () => {
+      const { data } = await axios.get(`http://188.166.247.236/api/factory`);
 
-  if (id != undefined) {
-    insuranceData = insuranceData.filter(function (data) {
-      return data.contractAddress == id;
-    });
-  }
+      if (id != undefined) {
+        const transFromData = data.filter((item) => {
+          if (item.nameRegistry == id) {
+            const powerData = item.Data[providerValue];
+            return {
+              id: item.poolId,
+              name: item.poolName,
+              logoUrl: "",
+              contractAddress: item.nameRegistry,
+              currentPower: powerData?.CurrentPower.toFixed(2),
+              maxPower: powerData?.MaxPower,
+              percentPower: (
+                (powerData?.CurrentPower / powerData?.MaxPower) *
+                100
+              ).toFixed(2),
+            };
+          }
+        });
+
+        setInsuranceData(transFromData);
+      } else {
+        const transFromData = data.map((item) => {
+          console.log(data);
+          const powerData = item.Data[providerValue];
+          return {
+            id: item.poolId,
+            name: item.poolName,
+            logoUrl: "",
+            contractAddress: item.nameRegistry,
+            currentPower: powerData?.CurrentPower.toFixed(2),
+            maxPower: powerData?.MaxPower,
+            percentPower: (
+              (powerData?.CurrentPower / powerData?.MaxPower) *
+              100
+            ).toFixed(2),
+          };
+        });
+        setInsuranceData(transFromData);
+      }
+    };
+    funcGetInsurance();
+  }, []);
+
   return insuranceData;
-  // const jsonData = eval(data)
-  // if(jsonData != undefined && jsonData[0] != undefined){
-  //     jsonData.forEach(function(insurance,index){
-  //         if(insurance != undefined){
-  //             let rowData = insurance.attributes;
-  //             if(id != undefined && id == insurance.id){
-  //                 insuranceData.push({id:insurance.id, name: rowData.name, logoUrl: rowData.logo_url})
-  //             } else if(id == undefined){
-  //                 insuranceData.push({id:insurance.id, name: rowData.name, logoUrl: rowData.logo_url})
-  //             }
-  //         }
-  //     });
-
-  //     return insuranceData
-  // }
 };
 
 export default useGetInsurance;
