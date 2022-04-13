@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { moralisConfig } from "../config";
+import { config } from "../config";
 
 const UseGetProviderDetailApi = async () => {
   let providerDetailData = [];

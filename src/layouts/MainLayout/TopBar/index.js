@@ -3,11 +3,11 @@ import * as React from "react";
 import Button from "@mui/material/Button";
 import styled from "styled-components";
 import AppBar from "@mui/material/AppBar";
-
+import { useState, useEffect } from "react";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SideBar from "../SideBar";
-import { useMoralis } from "react-moralis";
+import ConnectWeb3 from "../../../hooks/useConnectWeb3";
 
 const NavDesktop = styled.nav`
   height: 80px;
@@ -50,32 +50,62 @@ const NavMobile = styled.div`
   align-items: center;
   background: #fff;
 `;
+
+String.prototype.replaceBetween = function (start, end, what) {
+  return this.substring(0, start) + what + this.substring(end);
+};
+
 const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
-  const { authenticate, isAuthenticated, user } = useMoralis();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [address, setAddress] = useState("");
+
+  const SetAuthenValue = () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const isLogin = localStorage.getItem("isLogin");
+      if (isLogin === "true" && address === "") {
+        const address = localStorage.getItem("address");
+        setIsAuthenticated(isLogin);
+        setAddress(address.replaceBetween(5, address.length - 4, "..."));
+      }
+    }
+  };
+
+  SetAuthenValue();
+
+  useEffect(() => {
+    const previouslySelectedWallet =
+      window.localStorage.getItem("selectedWallet");
+
+    if (previouslySelectedWallet && ConnectWeb3.onboard) {
+      ConnectWeb3.onboard.walletSelect(previouslySelectedWallet);
+    }
+  }, [ConnectWeb3.onboard]);
+
+  const connectWallet = async () => {
+    await ConnectWeb3?.onboard?.walletSelect();
+    await ConnectWeb3?.onboard?.walletCheck();
+    SetAuthenValue();
+  };
+
   if (!isAuthenticated) {
     return (
       <Button
         variant="contained"
-        onClick={() =>
-          authenticate({
-            onComplete: (res) => {
-              alert("🎉");
-            },
-          })
-        }
+        onClick={() => {
+          connectWallet();
+        }}
       >
         ConnectWallet
       </Button>
     );
   } else {
-    return <Button variant="contained">{user.get("username")}</Button>;
+    return <Button variant="contained">{address}</Button>;
   }
 });
 
 const Topbar = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const { authenticate, isAuthenticated, user } = useMoralis();
   return (
     <div>
       <AppBar>
