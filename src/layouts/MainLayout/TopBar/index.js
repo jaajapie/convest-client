@@ -8,6 +8,7 @@ import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import SideBar from "../SideBar";
 import ConnectWeb3 from "../../../hooks/useConnectWeb3";
+import { SignalCellularNull } from "@mui/icons-material";
 
 const NavDesktop = styled.nav`
   height: 80px;
@@ -59,19 +60,6 @@ const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [address, setAddress] = useState("");
 
-  const SetAuthenValue = () => {
-    if (typeof window !== "undefined" && window.localStorage) {
-      const isLogin = localStorage.getItem("isLogin");
-      if (isLogin === "true" && address === "") {
-        const address = localStorage.getItem("address");
-        setIsAuthenticated(isLogin);
-        setAddress(address.replaceBetween(5, address.length - 4, "..."));
-      }
-    }
-  };
-
-  SetAuthenValue();
-
   useEffect(() => {
     const previouslySelectedWallet =
       window.localStorage.getItem("selectedWallet");
@@ -80,6 +68,21 @@ const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
       ConnectWeb3.onboard.walletSelect(previouslySelectedWallet);
     }
   }, [ConnectWeb3.onboard]);
+
+  //
+  const SetAuthenValue = () => {
+    if (typeof window !== "undefined" && window.localStorage) {
+      const isLogin = localStorage.getItem("isLogin");
+      if (isLogin === "true" && address === "") {
+        const address = localStorage.getItem("address");
+        setIsAuthenticated(isLogin);
+        setAddress(address.replaceBetween(5, address.length - 4, "..."));
+        window.localStorage.setItem("address", null);
+      }
+    }
+  };
+
+  SetAuthenValue();
 
   const connectWallet = async () => {
     await ConnectWeb3?.onboard?.walletSelect();
