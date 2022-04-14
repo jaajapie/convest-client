@@ -5,6 +5,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Button from "@mui/material/Button";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import useGetPool from "../../../hooks/useGetPool";
 
 const PoolTableArea = styled("div")(({ theme }) => ({
   width: "100%",
@@ -97,41 +98,41 @@ const PoolItemDetailEndArea = styled("div")(({ theme }) => ({
   marginTop: "2%",
 }));
 export default function MainSection() {
-  const poolData = [];
-  poolData.push({
-    name: "Critical illness Pool",
-    totalCoverage: "21,458 Policies",
-    policyValue: "315,484 USD",
-    totalProvidedCapital: "954,584 USD",
-    poolAddress: "B83394ACH3445926",
-    availableValue: "201,548 USD",
-    totalPolicySoldVolume: "51,458 Policies",
-    totalPolicySoldValue: "2,584,255 USD",
-    cARRadio: "327 %",
-  });
-  poolData.push({
-    name: "Metaverse Index",
-    totalCoverage: "21,458 Policies",
-    policyValue: "27,663,777.09 USD",
-    totalProvidedCapital: "614.44 USD",
-    poolAddress: "C903394ACH3445926",
-    availableValue: "56.29 USD",
-    totalPolicySoldVolume: "57,458 Policies",
-    totalPolicySoldValue: "5,584,255 USD",
-    cARRadio: "427 %",
-  });
-  poolData.push({
-    name: "CAKE-BNB",
-    totalCoverage: "12,458 Policies",
-    policyValue: "8,663,777.09 USD",
-    totalProvidedCapital: "14.44 USD",
-    poolAddress: "P0903394ACH3445926",
-    availableValue: "58.29 USD",
-    totalPolicySoldVolume: "27,458 Policies",
-    totalPolicySoldValue: "584,255 USD",
-    cARRadio: "527 %",
-  });
-
+  // const poolData = [];
+  // poolData.push({
+  //   name: "Critical illness Pool",
+  //   totalCoverage: "21,458 Policies",
+  //   policyValue: "315,484 USD",
+  //   totalProvidedCapital: "954,584 USD",
+  //   poolAddress: "B83394ACH3445926",
+  //   availableValue: "201,548 USD",
+  //   totalPolicySoldVolume: "51,458 Policies",
+  //   totalPolicySoldValue: "2,584,255 USD",
+  //   cARRadio: "327 %",
+  // });
+  // poolData.push({
+  //   name: "Metaverse Index",
+  //   totalCoverage: "21,458 Policies",
+  //   policyValue: "27,663,777.09 USD",
+  //   totalProvidedCapital: "614.44 USD",
+  //   poolAddress: "C903394ACH3445926",
+  //   availableValue: "56.29 USD",
+  //   totalPolicySoldVolume: "57,458 Policies",
+  //   totalPolicySoldValue: "5,584,255 USD",
+  //   cARRadio: "427 %",
+  // });
+  // poolData.push({
+  //   name: "CAKE-BNB",
+  //   totalCoverage: "12,458 Policies",
+  //   policyValue: "8,663,777.09 USD",
+  //   totalProvidedCapital: "14.44 USD",
+  //   poolAddress: "P0903394ACH3445926",
+  //   availableValue: "58.29 USD",
+  //   totalPolicySoldVolume: "27,458 Policies",
+  //   totalPolicySoldValue: "584,255 USD",
+  //   cARRadio: "527 %",
+  // });
+  const poolData = useGetPool();
   const [expanded, setExpanded] = React.useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
@@ -152,7 +153,7 @@ export default function MainSection() {
               aria-controls="panel1bh-content"
               id="panel1bh-header"
             >
-              <PoolLogo src="https://set-core.s3.amazonaws.com/img/portfolios/fli_btc.svg"></PoolLogo>
+              {/* <PoolLogo src="https://set-core.s3.amazonaws.com/img/portfolios/fli_btc.svg"></PoolLogo> */}
               <TitleText>{pool.name}</TitleText>
               <KeyValueArea>
                 <KeyText>Total Active Coverage</KeyText>
@@ -163,7 +164,7 @@ export default function MainSection() {
                 <ValueText>{pool.policyValue}</ValueText>
               </KeyValueArea>
               <KeyValueArea>
-                <KeyText>Total Provided Capital (Support)</KeyText>
+                <KeyText>Total Provided Capital (Premium & Reserve)</KeyText>
                 <ValueText>{pool.totalProvidedCapital}</ValueText>
               </KeyValueArea>
             </AccordionSummary>
@@ -173,8 +174,16 @@ export default function MainSection() {
                 <ValueText>{pool.poolAddress}</ValueText>
               </PoolItemDetailArea>
               <PoolItemDetailArea>
-                <KeyText>Available Value</KeyText>
-                <ValueText>{pool.availableValue}</ValueText>
+                <KeyText>Total Policy Active (Coverage)</KeyText>
+                <ValueText>{pool.activePoliciesCoverageValue}</ValueText>
+              </PoolItemDetailArea>
+              <PoolItemDetailArea>
+                <KeyText>Total Policy Active (Volume)</KeyText>
+                <ValueText>{pool.totalCoverage}</ValueText>
+              </PoolItemDetailArea>
+              <PoolItemDetailArea>
+                <KeyText>Total Policy Active (Value)</KeyText>
+                <ValueText>{pool.policyValue}</ValueText>
               </PoolItemDetailArea>
               <PoolItemDetailArea>
                 <KeyText>Total Policy Sold (Volume)</KeyText>
@@ -185,11 +194,22 @@ export default function MainSection() {
                 <ValueText>{pool.totalPolicySoldValue}</ValueText>
               </PoolItemDetailArea>
               <PoolItemDetailArea>
+                <KeyText>Total Claim Reserve (Value)</KeyText>
+                <ValueText>{pool.totalClaimValueReserve}</ValueText>
+              </PoolItemDetailArea>
+              <PoolItemDetailArea>
+                <KeyText>Total Claim Paid (Value)</KeyText>
+                <ValueText>{pool.totalClaimValuePaid}</ValueText>
+              </PoolItemDetailArea>
+
+              <PoolItemDetailArea>
                 <KeyText>CAR Radio</KeyText>
                 <ValueText>{pool.cARRadio}</ValueText>
               </PoolItemDetailArea>
               <PoolItemDetailEndArea>
-                <Button variant="contained">Buy Policy</Button>
+                <Button variant="contained" href={pool.buyCoverUrl}>
+                  Buy Policy
+                </Button>
               </PoolItemDetailEndArea>
             </AccordionDetails>
           </AccordionGroup>

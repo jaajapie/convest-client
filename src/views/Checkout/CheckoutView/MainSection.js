@@ -11,6 +11,9 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
+import Button from "@mui/material/Button";
+import { useRouter } from "next/router";
+import useBuyCover from "../../../hooks/useBuyCover";
 
 const CheckoutArea = styled("div")(({ theme }) => ({
   marginTop: "5%",
@@ -111,6 +114,14 @@ const KeyValueArea = styled("div")(({ theme }) => ({
   alignItems: "center",
   minWidth: "20%",
 }));
+const ButtonArea = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  minWidth: "100%",
+  marginTop: "10px",
+}));
 const KeyText = styled("h4")(({ theme }) => ({
   fontSize: "16px",
   color: "rgb(122, 110, 170)",
@@ -144,9 +155,9 @@ const PresetAreaArea = styled("div")(({ theme }) => ({
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
     margin: theme.spacing(0.5),
-    color: "#1db371",
-    borderLeft: "1px solid #1db371 !important",
-    border: "1px solid #1db371",
+    color: "#168de2",
+    borderLeft: "1px solid #abdcff !important",
+    border: "1px solid #abdcff",
 
     fontSize: "12px",
     "&.Mui-disabled": {
@@ -169,60 +180,94 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 
 const currencies = [
   {
-    value: "ETH",
-    label: "ETH",
+    value: "USDT",
+    label: "USDT",
   },
   {
-    value: "mUSD",
-    label: "mUSD",
+    value: "BUSD",
+    label: "BUSD",
   },
   {
-    value: "WETH",
-    label: "WETH",
-  },
-  {
-    value: "DAI",
-    label: "DAI",
+    value: "USDC",
+    label: "USDC",
   },
 ];
 
-const MainSection = () => {
+const RenderDetail = (paramValue) => {
+  const BuyCoverData = useBuyCover(paramValue.poolId);
+  console.log(BuyCoverData);
+  const CoverDataByPlan = BuyCoverData.filter(
+    (item) => item.planId == paramValue.planId
+  );
+
   const [alignment, setAlignment] = React.useState("0");
 
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
-  const [currency, setCurrency] = React.useState("ETH");
+  const [currency, setCurrency] = React.useState("USDT");
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
+
+  const currentDay = new Date();
+  const month = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  const waitingPeriodDay = `${month[currentDay.getMonth()]} ${
+    currentDay.getDate() + 14
+  },  ${currentDay.getFullYear()}`;
+
+  const startPeriodDay = `${
+    month[currentDay.getMonth()]
+  } ${currentDay.getDate()},  ${currentDay.getFullYear()}`;
+
+  const rangPeriodDay = `${startPeriodDay} - ${
+    month[currentDay.getMonth()]
+  } ${currentDay.getDate()},  ${currentDay.getFullYear() + 1}`;
   return (
     <CheckoutArea>
       <CheckoutLeftArea>
+        {/* <CardArea>
+            <CardInnerArea>
+              <H5Head>Save 54%: Reduce the cost of cover with wNXM</H5Head>
+              <p>
+                wNXM can be bought at 0.0153 ETH instead of 0.0335 ETH and
+                redeemed 1:1 to NXM. Here s how:
+              </p>
+              <p>1. Get a quote below and choose to pay in NXM.</p>
+              <p>2. Buy the equivalent amount of wNXM on CowSwap.</p>
+              <p>3. Unwrap wNXM to NXM here.</p>
+              <p>4. Proceed with the cover purchase on this page.</p>
+            </CardInnerArea>
+          </CardArea> */}
         <CardArea>
           <CardInnerArea>
-            <H5Head>Save 54%: Reduce the cost of cover with wNXM</H5Head>
+            <H5Head>Purchase details</H5Head>
             <p>
-              wNXM can be bought at 0.0153 ETH instead of 0.0335 ETH and
-              redeemed 1:1 to NXM. Here s how:
+              Your coverage will become effective 14 days after your purchase
+              transaction is successfully recorded in the insurance pool
+              contracts. On or around {waitingPeriodDay}.
             </p>
-            <p>1. Get a quote below and choose to pay in NXM.</p>
-            <p>2. Buy the equivalent amount of wNXM on CowSwap.</p>
-            <p>3. Unwrap wNXM to NXM here.</p>
-            <p>4. Proceed with the cover purchase on this page.</p>
-          </CardInnerArea>
-        </CardArea>
-        <CardArea>
-          <CardInnerArea>
-            <H5Head>Quote details</H5Head>
             <p>
-              This product covers any token or combination of tokens you have in
-              the protocol. In case of a claim, you ll receive the equivalent of
-              your lost funds in ETH up to the covered amount. Alternatively you
-              can select DAI.
+              The premium payment conditions accept 3 types of stable coin
+              tokens (USDT, BUSD, and USDC). In the event of a claim, you will
+              be reimbursed in the specified token that you paid for the premium
+              up to the insured amount.
             </p>
             <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
+              {/* <Grid item xs={12} md={6}>
                 <PresetAreaArea>
                   <StyledToggleButtonGroup
                     size="small"
@@ -242,8 +287,8 @@ const MainSection = () => {
                     </ToggleButton>
                   </StyledToggleButtonGroup>
                 </PresetAreaArea>
-              </Grid>
-              <Grid item xs={12} md={6}>
+              </Grid> */}
+              {/* <Grid item xs={12} md={6}>
                 <PresetAreaArea>
                   <StyledToggleButtonGroup
                     size="small"
@@ -257,27 +302,35 @@ const MainSection = () => {
                     </ToggleButton>
                   </StyledToggleButtonGroup>
                 </PresetAreaArea>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={6}>
                 <CustomTextField
                   fullWidth
                   label="Period"
                   id="outlined-start-adornment"
                   sx={{ m: 1 }}
+                  value={rangPeriodDay}
                   InputProps={{
-                    endAdornment: (
-                      <InputAdornment position="start">kg</InputAdornment>
-                    ),
+                    readOnly: true,
+                    // endAdornment: (
+                    //   <InputAdornment position="start">DAYS</InputAdornment>
+                    // ),
                   }}
                 />
               </Grid>
-              <Grid item xs={12} md={6}>
+              <Grid item xs={12} md={4}>
                 <CustomTextField
                   fullWidth
                   label="Amount"
                   id="outlined-start-adornment"
-                  sx={{ m: 1, width: "32ch" }}
+                  sx={{ m: 1, width: "25ch" }}
+                  value={CoverDataByPlan[0].yearlyCost}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
+              </Grid>
+              <Grid item xs={12} md={2}>
                 <SelectCurrency
                   id="outlined-select-currency"
                   select
@@ -294,55 +347,55 @@ const MainSection = () => {
             </Grid>
           </CardInnerArea>
         </CardArea>
-        <CardArea>
-          <CardInnerArea>
-            <H5Head>Terms and conditions</H5Head>
-            <p>Covered:</p>
-            <p>
-              <ul>
-                <li>contract bugs</li>
-                <li>economic attacks, including oracle failures</li>
-                <li>governance attacks</li>
-              </ul>
-            </p>
-            <p>Supported chains:</p>
-            <p>
-              <CurrencyListArea>
-                <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
-                <InsuranceName>Ethereum</InsuranceName>
-                <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
-                <InsuranceName>Arbitrum</InsuranceName>
-                <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
-                <InsuranceName>Avalanche</InsuranceName>
-              </CurrencyListArea>
-            </p>
-            <p>Claiming:</p>
-            <p>
-              <ul>
-                <li>
-                  You must provide proof of the incurred loss at claim time.
-                </li>
-                <li>
-                  You should wait 72 hours after the event, so assessors have
-                  all details to make a decision.
-                </li>
-                <li>
-                  You can claim up to 35 days after the cover period expires,
-                  given your cover was active when the incident happened.
-                </li>
-              </ul>
-            </p>
-            <p>
-              Protocol Cover for OlympusDAO covers assets in OlympusDAO v1 and
-              OlympusDAO v2.
-            </p>
-            <p>
-              This cover is not a contract of insurance. Cover is provided on a
-              discretionary basis with Nexus Mutual members having the final say
-              on which claims are paid. Check out full details here.
-            </p>
-          </CardInnerArea>
-        </CardArea>
+        {/* <CardArea>
+            <CardInnerArea>
+              <H5Head>Terms and conditions</H5Head>
+              <p>Covered:</p>
+              <p>
+                <ul>
+                  <li>contract bugs</li>
+                  <li>economic attacks, including oracle failures</li>
+                  <li>governance attacks</li>
+                </ul>
+              </p>
+              <p>Supported chains:</p>
+              <p>
+                <CurrencyListArea>
+                  <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
+                  <InsuranceName>Ethereum</InsuranceName>
+                  <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
+                  <InsuranceName>Arbitrum</InsuranceName>
+                  <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
+                  <InsuranceName>Avalanche</InsuranceName>
+                </CurrencyListArea>
+              </p>
+              <p>Claiming:</p>
+              <p>
+                <ul>
+                  <li>
+                    You must provide proof of the incurred loss at claim time.
+                  </li>
+                  <li>
+                    You should wait 72 hours after the event, so assessors have
+                    all details to make a decision.
+                  </li>
+                  <li>
+                    You can claim up to 35 days after the cover period expires,
+                    given your cover was active when the incident happened.
+                  </li>
+                </ul>
+              </p>
+              <p>
+                Protocol Cover for OlympusDAO covers assets in OlympusDAO v1 and
+                OlympusDAO v2.
+              </p>
+              <p>
+                This cover is not a contract of insurance. Cover is provided on a
+                discretionary basis with Nexus Mutual members having the final say
+                on which claims are paid. Check out full details here.
+              </p>
+            </CardInnerArea>
+          </CardArea> */}
       </CheckoutLeftArea>
       <CheckoutRightArea>
         <CardArea>
@@ -350,38 +403,46 @@ const MainSection = () => {
             <H5Head>Summary</H5Head>
             <p>
               <CurrencyListArea>
-                <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo>
-                <InsuranceName>OlympusDAO</InsuranceName>
+                {/* <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo> */}
+                <InsuranceName>{CoverDataByPlan[0].name}</InsuranceName>
               </CurrencyListArea>
             </p>
-
             <KeyValueArea>
-              <KeyText>Capacity:</KeyText>
-              <ValueText>1.5k ETH / 4m DAI </ValueText>
+              <KeyText>Type:</KeyText>
+              <ValueText>{CoverDataByPlan[0].typeName}</ValueText>
             </KeyValueArea>
             <KeyValueArea>
-              <KeyText>Pay in:</KeyText>
+              <KeyText>Max Coverage:</KeyText>
               <ValueText>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                  defaultValue="eth"
-                >
-                  <RadioCustom value="eth" control={<Radio />} label="ETH" />
-                  <RadioCustom value="nxm" control={<Radio />} label="NXM" />
-                </RadioGroup>
+                {CoverDataByPlan[0].maxCoverage} {currency}
               </ValueText>
             </KeyValueArea>
+
             <KeyValueArea>
-              <KeyText>You ll pay:</KeyText>
-              <ValueText>0.0000 ETH </ValueText>
+              <KeyText>You will pay:</KeyText>
+              <ValueText>
+                {CoverDataByPlan[0].yearlyCost} {currency}{" "}
+              </ValueText>
             </KeyValueArea>
+            <ButtonArea>
+              <Button variant="contained">Purchase</Button>
+            </ButtonArea>
           </CardInnerArea>
         </CardArea>
       </CheckoutRightArea>
     </CheckoutArea>
   );
+};
+
+const MainSection = () => {
+  const router = useRouter();
+  const { poolId, planId } = router.query;
+
+  if (poolId != undefined) {
+    return <RenderDetail poolId={poolId} planId={planId}></RenderDetail>;
+  } else {
+    return <div>No data</div>;
+  }
 };
 
 export default MainSection;

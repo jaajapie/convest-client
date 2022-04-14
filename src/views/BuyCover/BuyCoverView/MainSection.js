@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
+import { useRouter } from "next/router";
 
 const BuyCoverArea = styled("div")(({ theme }) => ({
   marginTop: "2%",
@@ -28,90 +29,10 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const CreateTabBuyCover = () => {
-  // const BuyCoverData = [];
-  // BuyCoverData.push({
-  //   id: 1,
-  //   typeName: "Type1",
-  //   name: "Health Insurance",
-  //   detail1: "USDT 10%",
-  //   detail2: "COMPOUND LENDING 50%",
-  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-  //   investmentRating: 4,
-  //   investmentRisk: "Level 7/10 (Hight Risk)",
-  //   dailyCost: "0.15 USD",
-  //   monthlyCost: "4.5 USD",
-  //   yearlyCost: "54.75 USD",
-  //   profitSharing: "5.42 %",
-  //   profitEarned: "3.12 USD",
-  //   stakedValue: "0.157485",
-  // });
-  // BuyCoverData.push({
-  //   id: 2,
-  //   typeName: "Type2",
-  //   name: "Health Insurance2",
-  //   detail1: "USDT 10%",
-  //   detail2: "COMPOUND LENDING 50%",
-  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-  //   investmentRating: 4,
-  //   investmentRisk: "Level 7/10 (Hight Risk)",
-  //   dailyCost: "0.15 USD",
-  //   monthlyCost: "4.5 USD",
-  //   yearlyCost: "54.75 USD",
-  //   profitSharing: "5.42 %",
-  //   profitEarned: "3.12 USD",
-  //   stakedValue: "0.157485",
-  // });
-  // BuyCoverData.push({
-  //   id: 3,
-  //   typeName: "Type2",
-  //   name: "Health Insurance2",
-  //   detail1: "USDT 10%",
-  //   detail2: "COMPOUND LENDING 50%",
-  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-  //   investmentRating: 4,
-  //   investmentRisk: "Level 7/10 (Hight Risk)",
-  //   dailyCost: "0.15 USD",
-  //   monthlyCost: "4.5 USD",
-  //   yearlyCost: "54.75 USD",
-  //   profitSharing: "5.42 %",
-  //   profitEarned: "3.12 USD",
-  //   stakedValue: "0.157485",
-  // });
-  // BuyCoverData.push({
-  //   id: 4,
-  //   typeName: "Type2",
-  //   name: "Health Insurance2",
-  //   detail1: "USDT 10%",
-  //   detail2: "COMPOUND LENDING 50%",
-  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-  //   investmentRating: 4,
-  //   investmentRisk: "Level 7/10 (Hight Risk)",
-  //   dailyCost: "0.15 USD",
-  //   monthlyCost: "4.5 USD",
-  //   yearlyCost: "54.75 USD",
-  //   profitSharing: "5.42 %",
-  //   profitEarned: "3.12 USD",
-  //   stakedValue: "0.157485",
-  // });
-  // BuyCoverData.push({
-  //   id: 5,
-  //   typeName: "Type2",
-  //   name: "Health Insurance2",
-  //   detail1: "USDT 10%",
-  //   detail2: "COMPOUND LENDING 50%",
-  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-  //   investmentRating: 4,
-  //   investmentRisk: "Level 7/10 (Hight Risk)",
-  //   dailyCost: "0.15 USD",
-  //   monthlyCost: "4.5 USD",
-  //   yearlyCost: "54.75 USD",
-  //   profitSharing: "5.42 %",
-  //   profitEarned: "3.12 USD",
-  //   stakedValue: "0.157485",
-  // });
-  const BuyCoverData = useBuyCover("HB16022022");
-  console.log("BuyCoverData::");
-  console.log(BuyCoverData);
+  const router = useRouter();
+  const { poolId } = router.query;
+
+  const BuyCoverData = useBuyCover(poolId);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -127,11 +48,17 @@ const CreateTabBuyCover = () => {
   );
 };
 const MainContent = () => {
-  return (
-    <BuyCoverArea>
-      <CreateTabBuyCover></CreateTabBuyCover>
-    </BuyCoverArea>
-  );
+  const router = useRouter();
+  const { poolId } = router.query;
+  if (poolId != undefined) {
+    return (
+      <BuyCoverArea>
+        <CreateTabBuyCover></CreateTabBuyCover>
+      </BuyCoverArea>
+    );
+  } else {
+    return <div>No data</div>;
+  }
 };
 
 export default MainContent;

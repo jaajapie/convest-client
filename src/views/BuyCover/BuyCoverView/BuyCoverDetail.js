@@ -128,6 +128,8 @@ const BuyCoverDetailFooterArea = styled("div")(({ theme }) => ({
   flexDirection: "row",
   justifyContent: "space-around",
   marginTop: "10px",
+  borderTop: "0.5px solid #ccc",
+  paddingTop: "10px",
 }));
 
 const InsuranceLogo = styled("img")(({ theme }) => ({
@@ -189,28 +191,12 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 const BuyCoverDetail = ({ detail }) => {
   const [value, setValue] = React.useState(2);
-  const BuyCoverData = {
-    id: 1,
-    typeName: "Type1",
-    name: "Health Insurance",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  };
 
   return (
     <BuyCoverCardArea>
       <BuyCoverCardInnerArea>
         <BuyCoverDetailTopArea>
-          <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png" />
+          {/* <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png" /> */}
           <Box>
             <InsuranceName>{detail.typeName}</InsuranceName>
             <SmallDetailName>{detail.name}</SmallDetailName>
@@ -228,10 +214,11 @@ const BuyCoverDetail = ({ detail }) => {
               <Box sx={{ "& > legend": { mt: 2 } }}>
                 <Rating
                   name="simple-controlled"
+                  readOnly="true"
                   value={value}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                  }}
+                  // onChange={(event, newValue) => {
+                  //   setValue(newValue);
+                  // }}
                 />
               </Box>
             </ValueText>
@@ -260,6 +247,10 @@ const BuyCoverDetail = ({ detail }) => {
             <KeyText>Coverage Detail</KeyText>
             <ValueText>Read more</ValueText>
           </KeyValueArea>
+          <KeyValueArea>
+            <KeyText>Max Coverage</KeyText>
+            <ValueText>{detail.maxCoverage}</ValueText>
+          </KeyValueArea>
           {/* <KeyValueArea>
             <KeyText>Profit Sharing (APY)</KeyText>
             <ValueText>{detail.profitSharing}</ValueText>
@@ -277,7 +268,9 @@ const BuyCoverDetail = ({ detail }) => {
         </BuyCoverDetailContentArea>
         <BuyCoverDetailFooterArea>
           <Button variant="contained">REDEEM</Button>
-          <Button variant="contained">BUY&INVEST</Button>
+          <Button variant="contained" href={detail.buyCoverUrl} passHref>
+            BUY
+          </Button>
         </BuyCoverDetailFooterArea>
       </BuyCoverCardInnerArea>
     </BuyCoverCardArea>

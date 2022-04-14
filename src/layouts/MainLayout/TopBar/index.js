@@ -79,7 +79,9 @@ const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
         setAddress(
           addressStorage.replaceBetween(5, addressStorage.length - 4, "...")
         );
-        window.localStorage.setItem("address", null);
+        // window.localStorage.setItem("address", null);
+        // window.localStorage.setItem("isLogin", false);
+        // window.localStorage.setItem("selectedWallet", null);
       }
     }
   };
@@ -129,26 +131,16 @@ const Topbar = () => {
             <Link href="/" passHref>
               <StyleLink>Home</StyleLink>
             </Link>
-            <Link href="/" passHref>
-              <StyleLink>Member</StyleLink>
-            </Link>
             <Link href="/referral" passHref>
               <StyleLink>Referral</StyleLink>
             </Link>
-            <Link href="/buycover" passHref>
-              <StyleLink>BuyCover</StyleLink>
-            </Link>
-            <Link href="/provider" passHref>
-              <StyleLink>Provider</StyleLink>
-            </Link>
+
             <Link href="/pool" passHref>
-              <StyleLink>Pool</StyleLink>
+              <StyleLink>Get Insured</StyleLink>
             </Link>
-            <Link href="/checkout" passHref>
-              <StyleLink>Checkout</StyleLink>
-            </Link>
-            <Link href="/applyforpool" passHref>
-              <StyleLink>ApplyForPool</StyleLink>
+
+            <Link href="/provider" passHref>
+              <StyleLink>Become Provider</StyleLink>
             </Link>
           </NavLeftArea>
           <NavRightArea>

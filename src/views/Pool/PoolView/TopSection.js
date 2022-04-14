@@ -73,10 +73,12 @@ const TopSection = () => {
               <PoolCardArea>
                 <PoolCardTopArea>
                   <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
-                  <PoolButton variant="outlined">Buy Cover</PoolButton>
+                  <PoolButton variant="outlined" href="/activecover" passHref>
+                    My Policy
+                  </PoolButton>
                 </PoolCardTopArea>
                 <PoolCardFooterArea>
-                  <PoolCardDescText>My Total Value Covered</PoolCardDescText>
+                  <PoolCardDescText>My Total Policy Value</PoolCardDescText>
                 </PoolCardFooterArea>
               </PoolCardArea>
             </Grid>
@@ -84,10 +86,12 @@ const TopSection = () => {
               <PoolCardArea>
                 <PoolCardTopArea>
                   <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
-                  <PoolButton variant="outlined">Stake</PoolButton>
+                  <PoolButton variant="outlined" href="/myclaim" passHref>
+                    My Claims
+                  </PoolButton>
                 </PoolCardTopArea>
                 <PoolCardFooterArea>
-                  <PoolCardDescText>My Total Value Staked</PoolCardDescText>
+                  <PoolCardDescText>My Total Claim Value </PoolCardDescText>
                 </PoolCardFooterArea>
               </PoolCardArea>
             </Grid>
@@ -95,10 +99,12 @@ const TopSection = () => {
               <PoolCardArea>
                 <PoolCardTopArea>
                   <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
-                  <PoolButton variant="outlined">Get $INSUR</PoolButton>
+                  <PoolButton variant="outlined" href="/provider" passHref>
+                    Become Provider
+                  </PoolButton>
                 </PoolCardTopArea>
                 <PoolCardFooterArea>
-                  <PoolCardDescText>$INSUR Market Price</PoolCardDescText>
+                  <PoolCardDescText>My Total Mutual Value</PoolCardDescText>
                 </PoolCardFooterArea>
               </PoolCardArea>
             </Grid>

@@ -30,6 +30,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
+import useGetPool from "../../../hooks/useGetPool";
+import useGetPolicy from "../../../hooks/useGetPolicy";
 
 const CoverTableArea = styled("div")(({ theme }) => ({
   width: "100%",
@@ -150,52 +152,47 @@ const headCells = [
     label: "No.",
   },
   {
-    id: "claim_id",
+    id: "policy_id",
     numeric: false,
     disablePadding: true,
-    label: "Claim ID",
+    label: "Policy ID",
   },
+
   {
-    id: "cover_id",
+    id: "coverage_name",
     numeric: false,
     disablePadding: false,
-    label: "Cover ID",
+    label: "Coverage Name",
   },
   {
-    id: "owner",
+    id: "coverage_period",
     numeric: false,
     disablePadding: false,
-    label: "Owner",
+    label: "Coverage Period",
   },
   {
-    id: "protocol",
+    id: "premium_amount",
     numeric: false,
     disablePadding: false,
-    label: "Protocol",
+    label: "Premium Amount",
   },
   {
-    id: "cover_type",
+    id: "max_coverage",
     numeric: false,
     disablePadding: false,
-    label: "Cover Type",
+    label: "Max Coverage",
   },
   {
-    id: "claim_amount",
+    id: "total_claim_paid",
     numeric: false,
     disablePadding: false,
-    label: "Claim Amount",
+    label: "Total Claim Paid ",
   },
   {
     id: "status",
     numeric: false,
     disablePadding: false,
     label: "Status",
-  },
-  {
-    id: "my_vote",
-    numeric: false,
-    disablePadding: false,
-    label: "My Vote",
   },
 ];
 
@@ -252,6 +249,8 @@ export default function MainSection() {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState([]);
 
+  const poolData = useGetPool();
+
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
     onRequestSort: PropTypes.func.isRequired,
@@ -285,7 +284,7 @@ export default function MainSection() {
             id="tableTitle"
             component="div"
           >
-            My Policy
+            My Policies
           </Typography>
         </Toolbar>
         <Toolbar
@@ -313,18 +312,25 @@ export default function MainSection() {
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                <MenuItem
+                  key={0}
+                  value={"all"}
+                  style={getStyles("all", personName, theme)}
+                >
+                  All
+                </MenuItem>
+                {poolData.map((pool) => (
                   <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
+                    key={pool.poolId}
+                    value={pool.name}
+                    style={getStyles(pool.name, personName, theme)}
                   >
-                    {name}
+                    {pool.name}
                   </MenuItem>
                 ))}
               </Select>
             </FormControl>
-            <Button variant="contained">Buy covers</Button>
+            <Button variant="contained">Get Insured</Button>
           </CoverToolbarArea>
         </Toolbar>
       </div>
@@ -448,7 +454,6 @@ export default function MainSection() {
                       <TableCell align="left">{row.cover_type}</TableCell>
                       <TableCell align="left">{row.claim_amount}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">{row.my_vote}</TableCell>
                     </TableRow>
                   );
                 })}

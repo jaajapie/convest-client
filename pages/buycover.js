@@ -3,7 +3,7 @@ import Coverage from "../src/views/BuyCover";
 import MainLayout from "../src/layouts/MainLayout";
 import Header from "../src/components/Header";
 
-const buycover = () => {
+const buycover = ({ poolId }) => {
   return (
     <MainLayout>
       <Header title={`CONVEST FINANCE: Buycover`}></Header>

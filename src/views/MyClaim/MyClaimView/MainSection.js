@@ -30,6 +30,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
+import useGetPool from "../../../hooks/useGetPool";
 
 const CoverTableArea = styled("div")(({ theme }) => ({
   width: "100%",
@@ -156,46 +157,34 @@ const headCells = [
     label: "Claim ID",
   },
   {
-    id: "cover_id",
+    id: "claim_request_date",
     numeric: false,
     disablePadding: false,
-    label: "Cover ID",
+    label: "Claim Request Date",
   },
   {
-    id: "owner",
+    id: "claim_request_amount",
     numeric: false,
     disablePadding: false,
-    label: "Owner",
+    label: "Claim Request Amount",
   },
   {
-    id: "protocol",
+    id: "claim_approve_amount",
     numeric: false,
     disablePadding: false,
-    label: "Protocol",
+    label: "Claim Approve Amount",
   },
   {
-    id: "cover_type",
+    id: "voting_power",
     numeric: false,
     disablePadding: false,
-    label: "Cover Type",
+    label: "Voting Power",
   },
   {
-    id: "claim_amount",
+    id: "claim_status",
     numeric: false,
     disablePadding: false,
-    label: "Claim Amount",
-  },
-  {
-    id: "status",
-    numeric: false,
-    disablePadding: false,
-    label: "Status",
-  },
-  {
-    id: "my_vote",
-    numeric: false,
-    disablePadding: false,
-    label: "My Vote",
+    label: "Claim Status",
   },
 ];
 
@@ -250,7 +239,8 @@ export default function MainSection() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   const theme = useTheme();
-  const [personName, setPersonName] = React.useState([]);
+  const [personName, setPersonName] = React.useState("all");
+  const poolData = useGetPool();
 
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
@@ -307,19 +297,25 @@ export default function MainSection() {
               <Select
                 labelId="demo-multiple-name-label"
                 id="demo-multiple-name"
-                multiple
                 value={personName}
                 onChange={handleChange}
                 input={<OutlinedInput label="Name" />}
                 MenuProps={MenuProps}
               >
-                {names.map((name) => (
+                <MenuItem
+                  key={0}
+                  value={"all"}
+                  style={getStyles("all", personName, theme)}
+                >
+                  All
+                </MenuItem>
+                {poolData.map((pool) => (
                   <MenuItem
-                    key={name}
-                    value={name}
-                    style={getStyles(name, personName, theme)}
+                    key={pool.poolId}
+                    value={pool.name}
+                    style={getStyles(pool.name, personName, theme)}
                   >
-                    {name}
+                    {pool.name}
                   </MenuItem>
                 ))}
               </Select>
@@ -447,8 +443,6 @@ export default function MainSection() {
                       <TableCell align="left">{row.protocol}</TableCell>
                       <TableCell align="left">{row.cover_type}</TableCell>
                       <TableCell align="left">{row.claim_amount}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
-                      <TableCell align="left">{row.my_vote}</TableCell>
                     </TableRow>
                   );
                 })}

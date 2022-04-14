@@ -56,6 +56,7 @@ const BuyCoverCardNameArea = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
+  padding: "15px",
   [theme.breakpoints.down("sm")]: {},
 }));
 const BuyCoverProgressArea = styled(Box)(({ theme }) => ({
@@ -127,11 +128,11 @@ const TopSection = () => {
       <BuyCoverHeadArea>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <BuyCoverCardArea>
                 <BuyCoverCardNameArea>
-                  <BuyCoverLogo src="https://set-core.s3.amazonaws.com/img/portfolios/fli_btc.svg"></BuyCoverLogo>
-                  <TitleText>ETH Capacity</TitleText>
+                  {/* <BuyCoverLogo src="https://set-core.s3.amazonaws.com/img/portfolios/fli_btc.svg"></BuyCoverLogo> */}
+                  <TitleText>USD VALUE</TitleText>
                 </BuyCoverCardNameArea>
                 <BuyCoverProgressArea sx={{ flexGrow: 1 }}>
                   <BorderLinearProgress variant="determinate" value={50} />
@@ -142,7 +143,7 @@ const TopSection = () => {
                 </BuyCoverProgressArea>
               </BuyCoverCardArea>
             </Grid>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={4}>
               <BuyCoverCardArea>
                 <BuyCoverCardNameArea>
                   <BuyCoverLogo src="https://app.insurace.io/asset/token/usdc.png"></BuyCoverLogo>
@@ -157,6 +158,21 @@ const TopSection = () => {
                 </BuyCoverProgressArea>
               </BuyCoverCardArea>
             </Grid>
+            <Grid item xs={12} md={4}>
+              <BuyCoverCardArea>
+                <BuyCoverCardNameArea>
+                  <BuyCoverLogo src="https://app.insurace.io/asset/token/usdc.png"></BuyCoverLogo>
+                  <TitleText>USD Capacity</TitleText>
+                </BuyCoverCardNameArea>
+                <BuyCoverProgressArea sx={{ flexGrow: 1 }}>
+                  <BorderLinearProgress variant="determinate" value={50} />
+                  <BuyCoverProgressFooterArea>
+                    <DetailText>1,601.0114 (used)</DetailText>
+                    <DetailText>(total) 3,848.5296</DetailText>
+                  </BuyCoverProgressFooterArea>
+                </BuyCoverProgressArea>
+              </BuyCoverCardArea>
+            </Grid> */}
           </Grid>
         </Box>
       </BuyCoverHeadArea>
