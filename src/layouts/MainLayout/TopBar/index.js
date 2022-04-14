@@ -73,10 +73,12 @@ const IsAuthenRender = React.forwardRef(function IsAuthenRender(props, ref) {
   const SetAuthenValue = () => {
     if (typeof window !== "undefined" && window.localStorage) {
       const isLogin = localStorage.getItem("isLogin");
-      if (isLogin === "true" && address === "") {
-        const address = localStorage.getItem("address");
+      const addressStorage = localStorage.getItem("address");
+      if (address === "" && addressStorage != null && isLogin == "true") {
         setIsAuthenticated(isLogin);
-        setAddress(address.replaceBetween(5, address.length - 4, "..."));
+        setAddress(
+          addressStorage.replaceBetween(5, addressStorage.length - 4, "...")
+        );
         window.localStorage.setItem("address", null);
       }
     }

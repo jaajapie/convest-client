@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+import useBuyCover from "../../../hooks/useBuyCover";
 import BuyCoverDetail from "./BuyCoverDetail";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";
@@ -27,94 +28,97 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const CreateTabBuyCover = () => {
-  const BuyCoverData = [];
-  BuyCoverData.push({
-    id: 1,
-    typeName: "Type1",
-    name: "Health Insurance",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  });
-  BuyCoverData.push({
-    id: 2,
-    typeName: "Type2",
-    name: "Health Insurance2",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  });
-  BuyCoverData.push({
-    id: 3,
-    typeName: "Type2",
-    name: "Health Insurance2",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  });
-  BuyCoverData.push({
-    id: 4,
-    typeName: "Type2",
-    name: "Health Insurance2",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  });
-  BuyCoverData.push({
-    id: 5,
-    typeName: "Type2",
-    name: "Health Insurance2",
-    detail1: "USDT 10%",
-    detail2: "COMPOUND LENDING 50%",
-    detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
-    investmentRating: 4,
-    investmentRisk: "Level 7/10 (Hight Risk)",
-    dailyCost: "0.15 USD",
-    monthlyCost: "4.5 USD",
-    yearlyCost: "54.75 USD",
-    profitSharing: "5.42 %",
-    profitEarned: "3.12 USD",
-    stakedValue: "0.157485",
-  });
+  // const BuyCoverData = [];
+  // BuyCoverData.push({
+  //   id: 1,
+  //   typeName: "Type1",
+  //   name: "Health Insurance",
+  //   detail1: "USDT 10%",
+  //   detail2: "COMPOUND LENDING 50%",
+  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
+  //   investmentRating: 4,
+  //   investmentRisk: "Level 7/10 (Hight Risk)",
+  //   dailyCost: "0.15 USD",
+  //   monthlyCost: "4.5 USD",
+  //   yearlyCost: "54.75 USD",
+  //   profitSharing: "5.42 %",
+  //   profitEarned: "3.12 USD",
+  //   stakedValue: "0.157485",
+  // });
+  // BuyCoverData.push({
+  //   id: 2,
+  //   typeName: "Type2",
+  //   name: "Health Insurance2",
+  //   detail1: "USDT 10%",
+  //   detail2: "COMPOUND LENDING 50%",
+  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
+  //   investmentRating: 4,
+  //   investmentRisk: "Level 7/10 (Hight Risk)",
+  //   dailyCost: "0.15 USD",
+  //   monthlyCost: "4.5 USD",
+  //   yearlyCost: "54.75 USD",
+  //   profitSharing: "5.42 %",
+  //   profitEarned: "3.12 USD",
+  //   stakedValue: "0.157485",
+  // });
+  // BuyCoverData.push({
+  //   id: 3,
+  //   typeName: "Type2",
+  //   name: "Health Insurance2",
+  //   detail1: "USDT 10%",
+  //   detail2: "COMPOUND LENDING 50%",
+  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
+  //   investmentRating: 4,
+  //   investmentRisk: "Level 7/10 (Hight Risk)",
+  //   dailyCost: "0.15 USD",
+  //   monthlyCost: "4.5 USD",
+  //   yearlyCost: "54.75 USD",
+  //   profitSharing: "5.42 %",
+  //   profitEarned: "3.12 USD",
+  //   stakedValue: "0.157485",
+  // });
+  // BuyCoverData.push({
+  //   id: 4,
+  //   typeName: "Type2",
+  //   name: "Health Insurance2",
+  //   detail1: "USDT 10%",
+  //   detail2: "COMPOUND LENDING 50%",
+  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
+  //   investmentRating: 4,
+  //   investmentRisk: "Level 7/10 (Hight Risk)",
+  //   dailyCost: "0.15 USD",
+  //   monthlyCost: "4.5 USD",
+  //   yearlyCost: "54.75 USD",
+  //   profitSharing: "5.42 %",
+  //   profitEarned: "3.12 USD",
+  //   stakedValue: "0.157485",
+  // });
+  // BuyCoverData.push({
+  //   id: 5,
+  //   typeName: "Type2",
+  //   name: "Health Insurance2",
+  //   detail1: "USDT 10%",
+  //   detail2: "COMPOUND LENDING 50%",
+  //   detail3: "UNISWAP LIQUIDITY PROVIDER 30%",
+  //   investmentRating: 4,
+  //   investmentRisk: "Level 7/10 (Hight Risk)",
+  //   dailyCost: "0.15 USD",
+  //   monthlyCost: "4.5 USD",
+  //   yearlyCost: "54.75 USD",
+  //   profitSharing: "5.42 %",
+  //   profitEarned: "3.12 USD",
+  //   stakedValue: "0.157485",
+  // });
+  const BuyCoverData = useBuyCover("HB16022022");
+  console.log("BuyCoverData::");
+  console.log(BuyCoverData);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={2}>
           {BuyCoverData.map((detail, indexDetail) => (
             <Grid key={indexDetail} item xs={12} md={4}>
-              <BuyCoverDetail Id={detail.id ?? 0}></BuyCoverDetail>
+              <BuyCoverDetail detail={detail}></BuyCoverDetail>
             </Grid>
           ))}
         </Grid>

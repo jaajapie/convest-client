@@ -187,7 +187,7 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const BuyCoverDetail = ({ Id, name, imgUrl, providerName }) => {
+const BuyCoverDetail = ({ detail }) => {
   const [value, setValue] = React.useState(2);
   const BuyCoverData = {
     id: 1,
@@ -212,15 +212,15 @@ const BuyCoverDetail = ({ Id, name, imgUrl, providerName }) => {
         <BuyCoverDetailTopArea>
           <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png" />
           <Box>
-            <InsuranceName>{BuyCoverData.typeName}</InsuranceName>
-            <SmallDetailName>{BuyCoverData.name}</SmallDetailName>
+            <InsuranceName>{detail.typeName}</InsuranceName>
+            <SmallDetailName>{detail.name}</SmallDetailName>
           </Box>
         </BuyCoverDetailTopArea>
-        <BuyCoverDetailTopDetailArea>
-          <SmallTopDetailName>{BuyCoverData.detail1}</SmallTopDetailName>
-          <SmallTopDetailName>{BuyCoverData.detail2}</SmallTopDetailName>
-          <SmallTopDetailName>{BuyCoverData.detail3}</SmallTopDetailName>
-        </BuyCoverDetailTopDetailArea>
+        {/* <BuyCoverDetailTopDetailArea>
+          <SmallTopDetailName>{detail.detail1}</SmallTopDetailName>
+          <SmallTopDetailName>{detail.detail2}</SmallTopDetailName>
+          <SmallTopDetailName>{detail.detail3}</SmallTopDetailName>
+        </BuyCoverDetailTopDetailArea> */}
         <BuyCoverDetailContentArea>
           <KeyValueArea>
             <KeyText>Investment Rating</KeyText>
@@ -238,19 +238,19 @@ const BuyCoverDetail = ({ Id, name, imgUrl, providerName }) => {
           </KeyValueArea>
           <KeyValueArea>
             <KeyText>Investment Risk</KeyText>
-            <ValueText>{BuyCoverData.investmentRisk} </ValueText>
+            <ValueText>{detail.investmentRisk} </ValueText>
           </KeyValueArea>
           <KeyValueArea>
             <KeyText>Daily Cost</KeyText>
-            <ValueText>{BuyCoverData.dailyCost}</ValueText>
+            <ValueText>{detail.dailyCost}</ValueText>
           </KeyValueArea>
           <KeyValueArea>
             <KeyText>Monthly Cost</KeyText>
-            <ValueText>{BuyCoverData.monthlyCost}</ValueText>
+            <ValueText>{detail.monthlyCost}</ValueText>
           </KeyValueArea>
           <KeyValueArea>
             <KeyText>Yearly Cost</KeyText>
-            <ValueText>{BuyCoverData.yearlyCost}</ValueText>
+            <ValueText>{detail.yearlyCost}</ValueText>
           </KeyValueArea>
           <KeyValueArea>
             <KeyText>Pool Statistic</KeyText>
@@ -260,20 +260,20 @@ const BuyCoverDetail = ({ Id, name, imgUrl, providerName }) => {
             <KeyText>Coverage Detail</KeyText>
             <ValueText>Read more</ValueText>
           </KeyValueArea>
-          <KeyValueArea>
+          {/* <KeyValueArea>
             <KeyText>Profit Sharing (APY)</KeyText>
-            <ValueText>{BuyCoverData.profitSharing}</ValueText>
-          </KeyValueArea>
-          <BuyCoverDetailContentFooterArea>
+            <ValueText>{detail.profitSharing}</ValueText>
+          </KeyValueArea> */}
+          {/* <BuyCoverDetailContentFooterArea>
             <KeyValueArea>
               <KeyText>Profit Earned</KeyText>
-              <ValueText>{BuyCoverData.profitEarned}</ValueText>
+              <ValueText>{detail.profitEarned}</ValueText>
             </KeyValueArea>
             <KeyValueArea>
               <KeyText>LP Staked Value</KeyText>
-              <ValueText>{BuyCoverData.stakedValue}</ValueText>
+              <ValueText>{detail.stakedValue}</ValueText>
             </KeyValueArea>
-          </BuyCoverDetailContentFooterArea>
+          </BuyCoverDetailContentFooterArea> */}
         </BuyCoverDetailContentArea>
         <BuyCoverDetailFooterArea>
           <Button variant="contained">REDEEM</Button>

@@ -11,9 +11,6 @@ const onboard = Onboard({
   networkId: Number(config.networkId), // [Integer] The Ethereum network ID your Dapp uses.
   subscriptions: {
     address: async (address) => {
-      console.log("onboard.getState().address::");
-      console.log(onboard.getState().address);
-      console.log(onboard.getState().address);
       if (address != null) {
         if (address.length === 42) {
           window.localStorage.setItem("address", address);
