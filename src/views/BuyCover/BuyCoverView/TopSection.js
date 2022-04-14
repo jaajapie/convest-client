@@ -60,7 +60,8 @@ const BuyCoverCardNameArea = styled("div")(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {},
 }));
 const BuyCoverProgressArea = styled(Box)(({ theme }) => ({
-  marginTop: "5%",
+  // marginTop: "5%",
+  position: "relative",
   [theme.breakpoints.down("sm")]: {},
 }));
 const BuyCoverProgressFooterArea = styled("div")(({ theme }) => ({
@@ -122,6 +123,22 @@ const DetailText = styled("h4")(({ theme }) => ({
   lineHeight: "22px",
   marginTop: "1px",
 }));
+const MiniBarProgress = styled("div")(({ theme }) => ({
+  height: "100%",
+  position: "absolute",
+  top: "0rem",
+  left: "0rem",
+}));
+const MiniBar = styled("div")(({ theme }) => ({
+  height: "0.7rem",
+  border: "1px solid #2775ca",
+  borderRadius: "8px",
+  position: "relative",
+  width: "-webkit-calc(100% - 2rem)",
+  width: "-moz-calc(100% - 2rem)",
+  width: "calc(100% - 2rem)",
+  marginRight: "0.5rem",
+}));
 const TopSection = () => {
   return (
     <>
@@ -134,13 +151,87 @@ const TopSection = () => {
                   {/* <BuyCoverLogo src="https://set-core.s3.amazonaws.com/img/portfolios/fli_btc.svg"></BuyCoverLogo> */}
                   <TitleText>USD VALUE</TitleText>
                 </BuyCoverCardNameArea>
-                <BuyCoverProgressArea sx={{ flexGrow: 1 }}>
-                  <BorderLinearProgress variant="determinate" value={50} />
-                  <BuyCoverProgressFooterArea>
-                    <DetailText>1,601.0114 (used)</DetailText>
-                    <DetailText>(total) 3,848.5296</DetailText>
-                  </BuyCoverProgressFooterArea>
-                </BuyCoverProgressArea>
+                <div
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      width: "100%",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "30%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <BuyCoverLogo src="logo/usdt.png"></BuyCoverLogo>
+                      <div>USDT 30%</div>
+                    </div>
+                    <div
+                      style={{
+                        width: "40%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <BuyCoverLogo src="logo/busd.png"></BuyCoverLogo>
+                      <div>BUSD 40%</div>
+                    </div>
+                    <div
+                      style={{
+                        width: "30%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flexDirection: "row",
+                      }}
+                    >
+                      <BuyCoverLogo src="logo/usdc.png"></BuyCoverLogo>
+                      <div>USDC 30%</div>
+                    </div>
+                  </div>
+
+                  <BuyCoverProgressArea sx={{ flexGrow: 1 }}>
+                    {/* <BorderLinearProgress variant="determinate" value={50} /> */}
+                    <MiniBar>
+                      <MiniBarProgress
+                        style={{
+                          left: 0,
+                          width: "30%",
+                          backgroundColor: "#26a17b",
+                        }}
+                      ></MiniBarProgress>
+                      <MiniBarProgress
+                        style={{
+                          left: "30%",
+                          width: "40%",
+                          backgroundColor: "#f0b90b",
+                        }}
+                      ></MiniBarProgress>
+                      <MiniBarProgress
+                        style={{
+                          left: "70%",
+                          width: "30%",
+                          backgroundColor: "#2775ca",
+                        }}
+                      ></MiniBarProgress>
+                    </MiniBar>
+                    <BuyCoverProgressFooterArea>
+                      <DetailText>1,601.0114 (used)</DetailText>
+                      <DetailText>(total) 3,848.5296</DetailText>
+                    </BuyCoverProgressFooterArea>
+                  </BuyCoverProgressArea>
+                </div>
               </BuyCoverCardArea>
             </Grid>
             {/* <Grid item xs={12} md={4}>

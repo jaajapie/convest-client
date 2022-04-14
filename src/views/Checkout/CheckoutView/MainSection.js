@@ -195,6 +195,7 @@ const currencies = [
 
 const RenderDetail = (paramValue) => {
   const BuyCoverData = useBuyCover(paramValue.poolId);
+
   console.log(BuyCoverData);
   const CoverDataByPlan = BuyCoverData.filter(
     (item) => item.planId == paramValue.planId
@@ -324,7 +325,7 @@ const RenderDetail = (paramValue) => {
                   label="Amount"
                   id="outlined-start-adornment"
                   sx={{ m: 1, width: "25ch" }}
-                  value={CoverDataByPlan[0].yearlyCost}
+                  value={CoverDataByPlan[0]?.yearlyCost}
                   InputProps={{
                     readOnly: true,
                   }}
@@ -404,24 +405,24 @@ const RenderDetail = (paramValue) => {
             <p>
               <CurrencyListArea>
                 {/* <InsuranceLogo src="https://app.insurace.io/asset/product/Biswap.png"></InsuranceLogo> */}
-                <InsuranceName>{CoverDataByPlan[0].name}</InsuranceName>
+                <InsuranceName>{CoverDataByPlan[0]?.name}</InsuranceName>
               </CurrencyListArea>
             </p>
             <KeyValueArea>
               <KeyText>Type:</KeyText>
-              <ValueText>{CoverDataByPlan[0].typeName}</ValueText>
+              <ValueText>{CoverDataByPlan[0]?.typeName}</ValueText>
             </KeyValueArea>
             <KeyValueArea>
               <KeyText>Max Coverage:</KeyText>
               <ValueText>
-                {CoverDataByPlan[0].maxCoverage} {currency}
+                {CoverDataByPlan[0]?.maxCoverage} {currency}
               </ValueText>
             </KeyValueArea>
 
             <KeyValueArea>
               <KeyText>You will pay:</KeyText>
               <ValueText>
-                {CoverDataByPlan[0].yearlyCost} {currency}{" "}
+                {CoverDataByPlan[0]?.yearlyCost} {currency}{" "}
               </ValueText>
             </KeyValueArea>
             <ButtonArea>
