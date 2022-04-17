@@ -51,6 +51,7 @@ const useGetPolicy = (poolId) => {
 
           return {
             index: index,
+            poolId: item.poolId,
             policyId: data.policyId,
             coverageName: item.coverageName,
             coveragePeriod: `${startPeriodDay} - ${endPeriodDay}`,
@@ -78,7 +79,7 @@ const useGetPolicy = (poolId) => {
     };
     funcGetPolicy();
   }, []);
-
+  console.log(policyData);
   return policyData;
 };
 

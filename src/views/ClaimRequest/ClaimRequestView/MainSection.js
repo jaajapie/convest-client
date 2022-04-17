@@ -17,10 +17,12 @@ import Button from "@mui/material/Button";
 
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
-
+import { useTheme } from "@mui/material/styles";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
+import useGetPolicy from "../../../hooks/useGetPolicy";
+import axios from "axios";
 
 const ApplyArea = styled("div")(({ theme }) => ({
   marginTop: "5%",
@@ -139,21 +141,90 @@ const CheckBoxLabel = styled(FormControlLabel)(({ theme }) => ({
   fontWeight: 400,
   paddingLeft: "25px",
 }));
+
+async function sendFiles(file) {
+  let formData = new FormData();
+
+  formData.append("file", file);
+
+  const response = await axios.post(
+    `http://165.22.109.117:8081/uploadFile`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  return response.data;
+}
+
+async function sendObject(data) {
+  // let base64Data = await getBase64(file);
+
+  // console.log(base64Data);
+
+  const response = await axios.post(`http://165.22.109.117:8081/uploadObject`, {
+    data,
+  });
+
+  return response.data;
+}
+
 const MainSection = () => {
-  const [cover, setCover] = React.useState("");
+  const theme = useTheme();
+  const [poolId, setPoolId] = React.useState("all");
   const [lossEvent, setLossEvent] = React.useState(null);
+  const [fileValue, setFileValue] = React.useState(null);
+  const [values, setValues] = React.useState({
+    lossEvent: "",
+    lossAmount: "",
+    claimAmount: "",
+    description: "",
+    topic: "",
+  });
+
   const handleChange = (event) => {
-    setCover(event.target.value);
+    setPoolId(event.target.value);
+  };
+  const handleEventChange = (event) => {
+    setLossEvent(event.target.value);
+  };
+  const handleInputChange = (prop) => (event) => {
+    console.log(event);
+    setValues({ ...values, [prop]: event.target.value });
   };
 
-  return (
-    <ApplyArea>
-      <h4>Claim Request</h4>
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={6}>
-            <ApplyLeftArea>
-              {/* <H5Head>Bridge</H5Head>
+  const handleFileChange = async (event) => {
+    if (event.target.files[0]) {
+      setFileValue(event.target.files[0]);
+
+      // const res = await sendFiles(fileValue);
+      // console.log(res);
+    }
+
+    // onChange(event);
+  };
+
+  function getStyles(name, poolId, theme) {
+    return {
+      fontWeight:
+        poolId.indexOf(name) === -1
+          ? theme.typography.fontWeightRegular
+          : theme.typography.fontWeightMedium,
+    };
+  }
+  const poolData = useGetPolicy().listData;
+  if (poolData != undefined) {
+    return (
+      <ApplyArea>
+        <h4>Claim Request</h4>
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={6}>
+              <ApplyLeftArea>
+                {/* <H5Head>Bridge</H5Head>
               <p>
                 <LinkText href="" passHref>
                   My Transactions
@@ -179,67 +250,72 @@ const MainSection = () => {
                 will not be responsible for token loss due to the wrong wallet
                 address provided.To get started, please read User Guide.
               </DetailText> */}
-            </ApplyLeftArea>
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <FormRightArea>
-              <TitleRightArea>Reference Report:</TitleRightArea>
-              <LabelRightArea>
-                Drag or choose your file to upload
-              </LabelRightArea>
-              <BrowseFileArea>
-                <InputfileCustom
-                  name="file"
-                  id="file"
-                  type="file"
-                  data-multiple-caption="{count} files selected"
-                  multiple=""
-                ></InputfileCustom>
-                <FileUploadLabel for="file" title="No File Choosen">
-                  <CloudUploadIcon fontSize="large"></CloudUploadIcon>
-                  <TextCenter>Choose a File</TextCenter>
-                  <p>
-                    <TextCenter>
-                      PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-                    </TextCenter>
-                  </p>
-                </FileUploadLabel>
-              </BrowseFileArea>
+              </ApplyLeftArea>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormRightArea>
+                <TitleRightArea>Reference Report:</TitleRightArea>
+                <LabelRightArea>
+                  Drag or choose your file to upload
+                </LabelRightArea>
+                <BrowseFileArea>
+                  <InputfileCustom
+                    name="file"
+                    id="file"
+                    type="file"
+                    data-multiple-caption="{count} files selected"
+                    multiple=""
+                    onChange={handleFileChange}
+                  ></InputfileCustom>
+                  <FileUploadLabel for="file" title="No File Choosen">
+                    <CloudUploadIcon fontSize="large"></CloudUploadIcon>
+                    <TextCenter>Choose a File</TextCenter>
+                    <p>
+                      <TextCenter>
+                        PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
+                      </TextCenter>
+                    </p>
+                  </FileUploadLabel>
+                </BrowseFileArea>
 
-              <FormControl fullWidth>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={12}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={DateAdapter}>
-                        <DatePicker
-                          label="Loss Event Time"
-                          value={lossEvent}
-                          onChange={(newValue) => {
-                            setLossEvent(newValue);
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
-                    </FormControl>
+                <FormControl fullWidth>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={12}>
+                      <FormControl fullWidth>
+                        <LocalizationProvider dateAdapter={DateAdapter}>
+                          <DatePicker
+                            label="Loss Event Time"
+                            renderInput={(params) => <TextField {...params} />}
+                            value={lossEvent}
+                            onChange={(newValue) => {
+                              setLossEvent(newValue);
+                            }}
+                          />
+                        </LocalizationProvider>
+                      </FormControl>
+                    </Grid>
                   </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <TextFieldCustom
-                      label="Loss Amount"
-                      placeholder="e. g. “0.00”"
-                      variant="outlined"
-                    />
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <TextFieldCustom
+                        label="Loss Amount"
+                        placeholder="e. g. “0.00”"
+                        variant="outlined"
+                        value={values.lossAmount}
+                        onChange={handleInputChange("lossAmount")}
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <TextFieldCustom
+                        label="Claim Amount"
+                        placeholder="e. g. “0.00”"
+                        variant="outlined"
+                        value={values.claimAmount}
+                        onChange={handleInputChange("claimAmount")}
+                      />
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} md={6}>
-                    <TextFieldCustom
-                      label="Claim Amount"
-                      placeholder="e. g. “0.00”"
-                      variant="outlined"
-                    />
-                  </Grid>
-                </Grid>
-                {/* <Grid container spacing={2}>
+                  {/* <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     <DatePickerArea fullWidth>
                       <LocalizationProvider dateAdapter={DateAdapter}>
@@ -269,95 +345,115 @@ const MainSection = () => {
                     </DatePickerArea>
                   </Grid>
                 </Grid> */}
-                <Grid container spacing={2}>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} md={12}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Cover
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={poolId}
+                          label="Cover"
+                          onChange={handleChange}
+                        >
+                          {poolData.map((pool) => (
+                            <MenuItem
+                              key={pool.poolId}
+                              value={pool.poolId}
+                              style={getStyles(
+                                pool.coverageName,
+                                poolId,
+                                theme
+                              )}
+                            >
+                              {pool.coverageName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid>
                   <Grid item xs={12} md={12}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Cover
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={cover}
-                        label="Cover"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={1}>Health Insurance</MenuItem>
-                        <MenuItem value={2}>Health Insurance2</MenuItem>
-                      </Select>
-                    </FormControl>
+                    <TextFieldCustom
+                      label="Topic"
+                      placeholder="e. g. “0.00”"
+                      variant="outlined"
+                      value={values.topic}
+                      onChange={handleInputChange("topic")}
+                    />
                   </Grid>
-                </Grid>
-                <Grid item xs={12} md={12}>
-                  <TextFieldCustom
-                    label="Loss Amount"
-                    placeholder="e. g. “0.00”"
-                    variant="outlined"
-                  />
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Protocol
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={cover}
-                        label="Protocol"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={1}>Autofarm</MenuItem>
-                        <MenuItem value={2}>Manualfarm</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Cover Type
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={cover}
-                        label="Cover Type"
-                        onChange={handleChange}
-                      >
-                        <MenuItem value={1}>
-                          Smart Contract Vulnerability
-                        </MenuItem>
-                        <MenuItem value={2}>Manualfarm</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </Grid>
-                </Grid>
+                  {/* <Grid container spacing={2}>
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Protocol
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={poolId}
+                          label="Protocol"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={1}>Autofarm</MenuItem>
+                          <MenuItem value={2}>Manualfarm</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-label">
+                          Cover Type
+                        </InputLabel>
+                        <Select
+                          labelId="demo-simple-select-label"
+                          id="demo-simple-select"
+                          value={poolId}
+                          label="Cover Type"
+                          onChange={handleChange}
+                        >
+                          <MenuItem value={1}>
+                            Smart Contract Vulnerability
+                          </MenuItem>
+                          <MenuItem value={2}>Manualfarm</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                  </Grid> */}
 
-                <Grid item xs={12} md={12}>
-                  <TextFieldCustom
-                    id="filled-multiline-flexible"
-                    label="Description"
-                    placeholder="e. g. “After purchasing the product you can get item...”"
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                  />
-                </Grid>
+                  <Grid item xs={12} md={12}>
+                    <TextFieldCustom
+                      id="filled-multiline-flexible"
+                      label="Description"
+                      placeholder="e. g. “After purchasing the product you can get item...”"
+                      multiline
+                      rows={4}
+                      variant="outlined"
+                      value={values.description}
+                      onChange={handleInputChange("description")}
+                    />
+                  </Grid>
 
-                <Grid item xs={12} md={12}>
-                  <Stack spacing={2} direction="row">
-                    <Button variant="contained">Preview</Button>
-                    <Button variant="contained">Submit Item</Button>
-                  </Stack>
-                </Grid>
-              </FormControl>
-            </FormRightArea>
+                  <Grid item xs={12} md={12}>
+                    <Stack spacing={2} direction="row">
+                      <Button variant="contained">Preview</Button>
+                      <Button variant="contained" onClic>
+                        Submit Item
+                      </Button>
+                    </Stack>
+                  </Grid>
+                </FormControl>
+              </FormRightArea>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-    </ApplyArea>
-  );
+        </Box>
+      </ApplyArea>
+    );
+  } else {
+    return <div>No Data</div>;
+  }
 };
 
 export default MainSection;

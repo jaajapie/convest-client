@@ -43,6 +43,8 @@ const useGetClaim = (poolId) => {
 
           return {
             index: index,
+            poolId: item.poolId,
+            poolName: item.poolName,
             claimId: data.claimId,
             claimRequestDate: `${requestDay}`,
             requestAmount: data.requestAmount,

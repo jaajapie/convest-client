@@ -24,13 +24,15 @@ const useGetPool = (id, providerValue) => {
           activePoliciesCoverageValue: `${item.activePoliciesCoverageValue} USD`,
           totalClaimValueReserve: `${item.totalClaimValueReserve} USD`,
           totalClaimValuePaid: `${item.totalClaimValuePaid} USD`,
+          status: item.status,
         };
       });
       setPoolData(transFromData);
     };
     funcGetPool();
   }, []);
-
+  console.log("poolData::");
+  console.log(poolData);
   return poolData;
 };
 

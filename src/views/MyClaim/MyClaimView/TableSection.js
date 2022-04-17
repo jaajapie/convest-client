@@ -24,6 +24,7 @@ import useGetPool from "../../../hooks/useGetPool";
 
 const columns = [
   { id: "index", label: "No." },
+  { id: "poolName", label: "Coverage Name" },
   { id: "claimId", label: "Claim ID", align: "left" },
   {
     id: "claimRequestDate",

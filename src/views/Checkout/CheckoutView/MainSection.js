@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
@@ -14,6 +14,16 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import useBuyCover from "../../../hooks/useBuyCover";
+import { useConnectWallet, useSetChain, useWallets } from "@web3-onboard/react";
+import { ethers, ContractFactory } from "ethers";
+import Web3 from "web3";
+import axios from "axios";
+import BigNumber from "bignumber.js";
+
+BigNumber.set({ EXPONENTIAL_AT: 1000 });
+
+let provider;
+let web3;
 
 const CheckoutArea = styled("div")(({ theme }) => ({
   marginTop: "5%",
@@ -192,9 +202,299 @@ const currencies = [
     label: "USDC",
   },
 ];
+async function Getdata(url) {
+  let data = (await axios.get(url)).data;
+
+  return data;
+}
+
+async function buyPolicy(poolId, planId, referral, currency) {
+  let account = await web3.eth.getAccounts();
+  // check null web3
+  console.log("account::");
+  console.log(account);
+  console.log(planId);
+  console.log(poolId);
+  const DataBlockchain = await Getdata(
+    "http://188.166.247.236/api/artifacts?version=2"
+  );
+  const IERC20 = await Getdata(
+    "http://188.166.247.236/api/artifacts/IERC20?version=2"
+  );
+
+  const DataFactory = await Getdata("http://188.166.247.236/api/Factory");
+
+  let dataFactoryUse = DataFactory.filter((item) => item.poolId === poolId);
+
+  if (!dataFactoryUse[0]) {
+    return console.error("No data factory found.");
+  } else {
+    dataFactoryUse = dataFactoryUse[0];
+  }
+
+  const policyManager = await dataFactoryUse?.policyManager;
+  const policyDetails = await dataFactoryUse?.policyDetails;
+
+  let nameRegsitryAddress = await dataFactoryUse?.nameRegistry;
+
+  let nameRegsitryContract = await new web3.eth.Contract(
+    DataBlockchain?.NameRegistry?.abi,
+    nameRegsitryAddress
+  );
+
+  let referralAddress = await nameRegsitryContract?.methods?.Referral().call();
+  console.log(refferalAddress);
+
+  console.log(policyManager);
+  web3.eth.getChainId().then(console.log);
+
+  const queryData = await Getdata(
+    `http://188.166.247.236/api/quotePolicy?user=${account[0]}&poolId=${poolId}&planId=${planId}&assets=${currency}`
+  );
+
+  console.log(queryData);
+
+  if (queryData?.message) {
+    return console.error(`ERROR: ${queryData?.message}`);
+  }
+
+  const currencyAddress = queryData?.Assets;
+
+  const approveBalance = await CallTranscation(
+    IERC20,
+    currencyAddress,
+    "allowance",
+    [account[0], policyManager],
+    account[0]
+  );
+
+  let balanceOfAssetsUser = await CallTranscation(
+    IERC20,
+    currencyAddress,
+    "balanceOf",
+    [account[0]],
+    account[0]
+  );
+
+  if (referral) {
+    if (referral === "0x0000000000000000000000000000000000000000") {
+    } else {
+      const isReferral = await CallTranscation(
+        DataBlockchain?.Referral?.abi,
+        referralAddress,
+        "isReferral",
+        [referral],
+        account[0]
+      );
+
+      console.log(isReferral);
+
+      if (!isReferral) {
+        referral = "0x0000000000000000000000000000000000000000";
+      }
+    }
+  } else {
+    referral = "0x0000000000000000000000000000000000000000";
+  }
+
+  console.log(`Allowance : ${approveBalance.toString()}`);
+
+  console.log(`Balance : ${balanceOfAssetsUser.toString()}`);
+
+  const decimalsOfAssets = await CallTranscation(
+    IERC20,
+    currencyAddress,
+    "decimals",
+    [],
+    account[0]
+  );
+
+  let buyValue = buy * 10 ** decimalsOfAssets;
+
+  const datapayload = await web3.eth.abi.encodeParameters(
+    [
+      "address",
+      "string",
+      "uint[]",
+      "uint",
+      "uint",
+      "uint8",
+      "bytes32",
+      "bytes32",
+    ],
+    [
+      queryData.Assets,
+      queryData.policyId,
+      queryData.Pricing,
+      queryData.generatedAt,
+      queryData.expiresAt,
+      queryData.v,
+      queryData.r,
+      queryData.s,
+    ]
+  );
+
+  const buy = queryData.Pricing[0];
+
+  console.log(
+    account[0],
+    policyManager,
+    queryData.policyId,
+    queryData.Assets,
+    queryData.Pricing,
+    referral,
+    datapayload
+  );
+
+  if (approveBalance >= buyValue) {
+    if (balanceOfAssetsUser >= buyValue) {
+      const buyPolicySendTranscation = await SendTranscation(
+        DataBlockchain?.PolicyManager?.abi,
+        policyManager,
+        "buyPolicy",
+        [
+          queryData.policyId,
+          queryData.Assets,
+          queryData.Pricing,
+          referral,
+          datapayload,
+        ],
+        account[0]
+      );
+
+      if (buyPolicySendTranscation) {
+        if (buyPolicySendTranscation.mesasge === "BoughtPolicy Successfully") {
+          console.log("BoughtPolicy Successfully");
+          console.log(buyPolicySendTranscation);
+        }
+      }
+    } else {
+      console.error("Balance Insufficient.");
+    }
+  } else {
+    balanceOfAssetsUser = await CallTranscation(
+      IERC20,
+      currencyAddress,
+      "balanceOf",
+      [account[0]],
+      account[0]
+    );
+
+    buyValue = buy * 10 ** decimalsOfAssets;
+
+    await SendTranscation(
+      IERC20,
+      currencyAddress,
+      "approve",
+      [policyManager, BigNumber(buyValue).toString()],
+      account[0]
+    );
+
+    if (balanceOfAssetsUser >= buyValue) {
+      const buyPolicySendTranscation = await SendTranscation(
+        DataBlockchain?.PolicyManager?.abi,
+        policyManager,
+        "buyPolicy",
+        [
+          queryData.policyId,
+          queryData.Assets,
+          queryData.Pricing,
+          referral,
+          datapayload,
+        ],
+        account[0]
+      );
+      if (buyPolicySendTranscation) {
+        if (buyPolicySendTranscation.mesasge === "BoughtPolicy Successfully") {
+          console.log("BoughtPolicy Successfully");
+          console.log(buyPolicySendTranscation);
+        }
+      }
+    } else {
+      console.error("Balance Insufficient.");
+    }
+  }
+}
+
+async function CallTranscation(
+  abi,
+  destination,
+  functions,
+  parameters,
+  account
+) {
+  let res;
+
+  const Contract = await new web3.eth.Contract(abi, destination);
+
+  await Contract.methods[functions](...parameters)
+    .call({
+      from: account,
+    })
+    .then((result) => {
+      res = result;
+    });
+
+  return res;
+}
+
+async function SendTranscation(
+  abi,
+  destination,
+  functions,
+  parameters,
+  account
+) {
+  const Contract = await new web3.eth.Contract(abi, destination);
+  console.log(functions);
+  console.log(parameters);
+
+  await Contract.methods[functions](...parameters)
+    .send({
+      from: account,
+    })
+    .on("transactionHash", (hash) => {
+      // const { emitter } = notify.hash(hash);
+      // emitter.on("txSent", console.log);
+      // emitter.on("txPool", console.log);
+      // emitter.on("txConfirmed", console.log);
+      // emitter.on("txSpeedUp", console.log);
+      // emitter.on("txCancel", console.log);
+      // emitter.on("txFailed", console.log);
+    })
+    .then((res) => {
+      console.log(res);
+
+      console.log("Event");
+      console.log(res?.events);
+
+      if (res?.events?.BoughtPolicy) {
+        return {
+          message: "BoughtPolicy Successfully",
+          data: res?.events?.BoughtPolicy,
+          returnData: res?.events?.BoughtPolicy?.returnValues,
+        };
+      }
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+}
 
 const RenderDetail = (paramValue) => {
   const BuyCoverData = useBuyCover(paramValue.poolId);
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+
+  useEffect(() => {
+    if (!wallet?.provider) {
+      provider = null;
+      web3 = null;
+    } else {
+      provider = new ethers.providers.Web3Provider(wallet.provider, "any");
+
+      web3 = new Web3(wallet.provider);
+    }
+  }, [wallet]);
 
   console.log(BuyCoverData);
   const CoverDataByPlan = BuyCoverData.filter(
@@ -202,7 +502,12 @@ const RenderDetail = (paramValue) => {
   );
 
   const [alignment, setAlignment] = React.useState("0");
-
+  const [referral, setReferral] = React.useState("");
+  const handleReferralChange = (event) => {
+    setReferral(event.target.value);
+  };
+  console.log("referral::");
+  console.log(referral);
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
   };
@@ -313,9 +618,6 @@ const RenderDetail = (paramValue) => {
                   value={rangPeriodDay}
                   InputProps={{
                     readOnly: true,
-                    // endAdornment: (
-                    //   <InputAdornment position="start">DAYS</InputAdornment>
-                    // ),
                   }}
                 />
               </Grid>
@@ -326,9 +628,6 @@ const RenderDetail = (paramValue) => {
                   id="outlined-start-adornment"
                   sx={{ m: 1, width: "25ch" }}
                   value={CoverDataByPlan[0]?.yearlyCost}
-                  InputProps={{
-                    readOnly: true,
-                  }}
                 />
               </Grid>
               <Grid item xs={12} md={2}>
@@ -344,6 +643,16 @@ const RenderDetail = (paramValue) => {
                     </MenuItem>
                   ))}
                 </SelectCurrency>
+              </Grid>
+              <Grid item xs={12} md={12}>
+                <CustomTextField
+                  fullWidth
+                  label="Referral"
+                  id="outlined-start-adornment"
+                  sx={{ m: 1 }}
+                  value={referral}
+                  onChange={handleReferralChange}
+                />
               </Grid>
             </Grid>
           </CardInnerArea>
@@ -426,7 +735,19 @@ const RenderDetail = (paramValue) => {
               </ValueText>
             </KeyValueArea>
             <ButtonArea>
-              <Button variant="contained">Purchase</Button>
+              <Button
+                variant="contained"
+                onClick={() =>
+                  buyPolicy(
+                    paramValue.poolId,
+                    paramValue.planId,
+                    referral,
+                    currency
+                  )
+                }
+              >
+                Purchase
+              </Button>
             </ButtonArea>
           </CardInnerArea>
         </CardArea>
