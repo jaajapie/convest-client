@@ -1,13 +1,26 @@
+import * as React from "react";
+import { useState, useEffect } from "react";
 import TopSection from "./ActiveCoverView/TopSection";
 import MainSection from "./ActiveCoverView/MainSection";
+import useGetPolicy from "../../hooks/useGetPolicy";
 
-const index = () => {
+function GetPolicy() {
+  const data = useGetPolicy();
+  return data;
+}
+
+const Index = () => {
+  const policyData = GetPolicy();
   return (
     <>
-      <TopSection></TopSection>
+      <TopSection
+        sumOfClaim={policyData.sumOfClaim}
+        sumOfStake={policyData.sumOfStake}
+        sumOfPremium={policyData.sumOfPremium}
+      ></TopSection>
       <MainSection></MainSection>
     </>
   );
 };
 
-export default index;
+export default Index;

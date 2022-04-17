@@ -240,6 +240,10 @@ const BuyCoverDetail = ({ detail }) => {
             <ValueText>{detail.yearlyCost}</ValueText>
           </KeyValueArea>
           <KeyValueArea>
+            <KeyText>Max Coverage</KeyText>
+            <ValueText>{detail.maxCoverage}</ValueText>
+          </KeyValueArea>
+          <KeyValueArea>
             <KeyText>Pool Statistic</KeyText>
             <ValueText>View Detail </ValueText>
           </KeyValueArea>
@@ -247,10 +251,7 @@ const BuyCoverDetail = ({ detail }) => {
             <KeyText>Coverage Detail</KeyText>
             <ValueText>Read more</ValueText>
           </KeyValueArea>
-          <KeyValueArea>
-            <KeyText>Max Coverage</KeyText>
-            <ValueText>{detail.maxCoverage}</ValueText>
-          </KeyValueArea>
+
           {/* <KeyValueArea>
             <KeyText>Profit Sharing (APY)</KeyText>
             <ValueText>{detail.profitSharing}</ValueText>

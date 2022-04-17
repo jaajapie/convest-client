@@ -161,6 +161,7 @@ const TopSection = () => {
                       display: "flex",
                       flexDirection: "row",
                       width: "100%",
+                      marginBottom: "10px",
                     }}
                   >
                     <div
@@ -226,10 +227,10 @@ const TopSection = () => {
                         }}
                       ></MiniBarProgress>
                     </MiniBar>
-                    <BuyCoverProgressFooterArea>
+                    {/* <BuyCoverProgressFooterArea>
                       <DetailText>1,601.0114 (used)</DetailText>
                       <DetailText>(total) 3,848.5296</DetailText>
-                    </BuyCoverProgressFooterArea>
+                    </BuyCoverProgressFooterArea> */}
                   </BuyCoverProgressArea>
                 </div>
               </BuyCoverCardArea>

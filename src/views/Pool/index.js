@@ -1,7 +1,7 @@
 import TopSection from "./PoolView/TopSection";
 import MainSection from "./PoolView/MainSection";
-
-const index = () => {
+import useGetPool from "../../hooks/useGetPool";
+const Index = () => {
   return (
     <>
       <TopSection></TopSection>
@@ -10,4 +10,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

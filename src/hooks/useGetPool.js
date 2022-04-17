@@ -3,13 +3,12 @@ import { useState, useEffect } from "react";
 
 const useGetPool = (id, providerValue) => {
   const [poolData, setPoolData] = useState([]);
+
   useEffect(() => {
     const funcGetPool = async () => {
       const { data } = await axios.get(`http://188.166.247.236/api/factory`);
 
       const transFromData = data.map((item) => {
-        console.log(data);
-
         return {
           poolId: item.poolId,
           name: item.poolName,

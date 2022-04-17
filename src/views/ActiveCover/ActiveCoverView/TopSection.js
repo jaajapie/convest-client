@@ -63,7 +63,9 @@ const PoolButton = styled(Button)(({ theme }) => ({
   color: "#ffff",
   [theme.breakpoints.down("sm")]: {},
 }));
-const TopSection = () => {
+const TopSection = (props) => {
+  const { sumOfClaim, sumOfStake, sumOfPremium } = props;
+  console.log(sumOfPremium);
   return (
     <>
       <PoolHeadArea>
@@ -72,7 +74,7 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>{sumOfPremium} USD</PoolCardTopicText>
                   <PoolButton variant="outlined" href="/pool" passHref>
                     Get Insured
                   </PoolButton>
@@ -85,7 +87,7 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>{sumOfClaim} USD</PoolCardTopicText>
                   <PoolButton variant="outlined" href="/myclaim" passHref>
                     My Claims
                   </PoolButton>
@@ -98,7 +100,7 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>{sumOfStake} USD</PoolCardTopicText>
                   <PoolButton variant="outlined" href="/provider" passHref>
                     Become Provider
                   </PoolButton>

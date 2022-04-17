@@ -16,19 +16,18 @@ const month = [
   "December",
 ];
 
-const useGetPolicy = (poolId) => {
-  const [policyData, setPolicyData] = useState([]);
+const useGetClaim = (poolId) => {
+  const [claimData, setClaimData] = useState([]);
 
   useEffect(() => {
-    let arrayPolicy = [];
+    let arrayClaim = [];
     let policyObj = {};
-    let index = 1;
     let sumOfClaim = 0;
     let sumOfStake = 0;
     let sumOfPremium = 0;
-    const funcGetPolicy = async () => {
+    const funcGetClaim = async () => {
       const { data } = await axios.post(
-        `http://188.166.247.236/api/listPolicies`,
+        `http://188.166.247.236/api/listPolicy`,
         { user: "0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF" }
       );
       let filterData = data;
@@ -50,7 +49,6 @@ const useGetPolicy = (poolId) => {
           } ${endDate.getDate()},  ${endDate.getFullYear()}`;
 
           return {
-            index: index,
             policyId: data.policyId,
             coverageName: item.coverageName,
             coveragePeriod: `${startPeriodDay} - ${endPeriodDay}`,
@@ -59,27 +57,26 @@ const useGetPolicy = (poolId) => {
             totalClaimPaid: data.claimAmountPaid,
             status: data.status,
           };
-          index = index + 1;
         });
 
-        arrayPolicy.push(...transFromData);
+        arrayClaim.push(...transFromData);
         sumOfClaim = sumOfClaim + item.allClaimAmountPaid;
         sumOfStake = sumOfStake + item.MIStaking;
         sumOfPremium = sumOfPremium + item.allPremiumAmount;
         return transFromData;
       });
 
-      policyObj.listData = arrayPolicy;
+      policyObj.listData = arrayClaim;
       policyObj.sumOfClaim = sumOfClaim;
       policyObj.sumOfStake = sumOfStake;
       policyObj.sumOfPremium = sumOfPremium;
 
-      setPolicyData(policyObj);
+      setClaimData(policyObj);
     };
-    funcGetPolicy();
+    funcGetClaim();
   }, []);
 
-  return policyData;
+  return claimData;
 };
 
-export default useGetPolicy;
+export default useGetClaim;

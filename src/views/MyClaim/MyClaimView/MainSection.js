@@ -31,6 +31,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import useGetPool from "../../../hooks/useGetPool";
+import useGetClaim from "../../../hooks/useGetClaim";
 
 const CoverTableArea = styled("div")(({ theme }) => ({
   width: "100%",
@@ -107,11 +108,11 @@ function createData(
   };
 }
 
-const rows = [
-  createData("1.", "111", 111, "OwnerName", 111, 111, "+62.21%", "Active", 4.3),
-  createData("2.", "222", 222, "OwnerName", 222, 222, "+2.21%", "Active", 4.1),
-  createData("3.", "333", 333, "OwnerName", 333, 333, "+11.21%", "Active", 5.1),
-];
+// const rows = [
+//   createData("1.", "111", 111, "OwnerName", 111, 111, "+62.21%", "Active", 4.3),
+//   createData("2.", "222", 222, "OwnerName", 222, 222, "+2.21%", "Active", 4.1),
+//   createData("3.", "333", 333, "OwnerName", 333, 333, "+11.21%", "Active", 5.1),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -241,6 +242,8 @@ export default function MainSection() {
   const theme = useTheme();
   const [personName, setPersonName] = React.useState("all");
   const poolData = useGetPool();
+  const claimData = useGetClaim();
+  const rows = claimData?.listData;
 
   EnhancedTableHead.propTypes = {
     numSelected: PropTypes.number.isRequired,
@@ -394,84 +397,80 @@ export default function MainSection() {
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
-
-  return (
-    <CoverTableArea sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? "small" : "medium"}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+  if (rows != undefined) {
+    return (
+      <CoverTableArea sx={{ width: "100%" }}>
+        <Paper sx={{ width: "100%", mb: 2 }}>
+          <EnhancedTableToolbar numSelected={selected.length} />
+          <TableContainer>
+            <Table
+              sx={{ minWidth: 750 }}
+              aria-labelledby="tableTitle"
+              size={dense ? "small" : "medium"}
+            >
+              <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+              />
+              <TableBody>
+                {/* if you don't need to support IE11, you can replace the `stableSort` call with:
                  rows.slice().sort(getComparator(order, orderBy)) */}
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                {stableSort(rows, getComparator(order, orderBy))
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((row, index) => {
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.no)}
-                      tabIndex={-1}
-                      key={row.no}
-                      selected={isItemSelected}
-                    >
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        align="left"
+                    return (
+                      <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, index + 1)}
+                        tabIndex={-1}
+                        key={index + 1}
+                        selected={isItemSelected}
                       >
-                        {row.no}
-                      </TableCell>
-                      <TableCell align="left">{row.claim_id}</TableCell>
-                      <TableCell align="left">{row.cover_id}</TableCell>
-                      <TableCell align="left">{row.owner}</TableCell>
-                      <TableCell align="left">{row.protocol}</TableCell>
-                      <TableCell align="left">{row.cover_type}</TableCell>
-                      <TableCell align="left">{row.claim_amount}</TableCell>
-                    </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+                        <TableCell align="left"> {index + 1}</TableCell>
+                        <TableCell align="left">{row.policyId}</TableCell>
+                        <TableCell align="left">{row.coverageName}</TableCell>
+                        <TableCell align="left">{row.coveragePeriod}</TableCell>
+                        <TableCell align="left">{row.premiumAmount}</TableCell>
+                        <TableCell align="left">{row.maxCoverage}</TableCell>
+                        <TableCell align="left">{row.totalClaimPaid}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                {emptyRows > 0 && (
+                  <TableRow
+                    style={{
+                      height: (dense ? 33 : 53) * emptyRows,
+                    }}
+                  >
+                    <TableCell colSpan={6} />
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Paper>
+        <FormControlLabel
+          control={<Switch checked={dense} onChange={handleChangeDense} />}
+          label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </CoverTableArea>
-  );
+      </CoverTableArea>
+    );
+  } else {
+    return <div>No Data</div>;
+  }
 }

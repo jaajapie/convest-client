@@ -98,40 +98,6 @@ const PoolItemDetailEndArea = styled("div")(({ theme }) => ({
   marginTop: "2%",
 }));
 export default function MainSection() {
-  // const poolData = [];
-  // poolData.push({
-  //   name: "Critical illness Pool",
-  //   totalCoverage: "21,458 Policies",
-  //   policyValue: "315,484 USD",
-  //   totalProvidedCapital: "954,584 USD",
-  //   poolAddress: "B83394ACH3445926",
-  //   availableValue: "201,548 USD",
-  //   totalPolicySoldVolume: "51,458 Policies",
-  //   totalPolicySoldValue: "2,584,255 USD",
-  //   cARRadio: "327 %",
-  // });
-  // poolData.push({
-  //   name: "Metaverse Index",
-  //   totalCoverage: "21,458 Policies",
-  //   policyValue: "27,663,777.09 USD",
-  //   totalProvidedCapital: "614.44 USD",
-  //   poolAddress: "C903394ACH3445926",
-  //   availableValue: "56.29 USD",
-  //   totalPolicySoldVolume: "57,458 Policies",
-  //   totalPolicySoldValue: "5,584,255 USD",
-  //   cARRadio: "427 %",
-  // });
-  // poolData.push({
-  //   name: "CAKE-BNB",
-  //   totalCoverage: "12,458 Policies",
-  //   policyValue: "8,663,777.09 USD",
-  //   totalProvidedCapital: "14.44 USD",
-  //   poolAddress: "P0903394ACH3445926",
-  //   availableValue: "58.29 USD",
-  //   totalPolicySoldVolume: "27,458 Policies",
-  //   totalPolicySoldValue: "584,255 USD",
-  //   cARRadio: "527 %",
-  // });
   const poolData = useGetPool();
   const [expanded, setExpanded] = React.useState(false);
 
