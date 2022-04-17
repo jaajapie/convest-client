@@ -6,8 +6,3 @@ export const config = {
   networkId: process.env.NETWORK_ID,
   dappId: process.env.DAPP_ID,
 };
-
-// export const apiconfig = {
-//     url: process.env.API_URL
-
-// };

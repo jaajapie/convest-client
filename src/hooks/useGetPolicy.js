@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { config } from "../config";
 
 const month = [
   "January",
@@ -27,10 +28,9 @@ const useGetPolicy = (poolId) => {
     let sumOfStake = 0;
     let sumOfPremium = 0;
     const funcGetPolicy = async () => {
-      const { data } = await axios.post(
-        `http://188.166.247.236/api/listPolicies`,
-        { user: "0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF" }
-      );
+      const { data } = await axios.post(`${config.url}/listPolicies`, {
+        user: "0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF",
+      });
       let filterData = data;
 
       if (poolId != undefined && poolId != "all") {

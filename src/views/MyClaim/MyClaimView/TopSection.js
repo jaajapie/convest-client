@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
+import useGetTotalData from "../../../hooks/useGetTotalData";
 
 const PoolHeadArea = styled("div")(({ theme }) => ({
   height: "250px",
@@ -64,6 +65,7 @@ const PoolButton = styled(Button)(({ theme }) => ({
   [theme.breakpoints.down("sm")]: {},
 }));
 const TopSection = () => {
+  const totalData = useGetTotalData();
   return (
     <>
       <PoolHeadArea>
@@ -72,7 +74,9 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalPolicyValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined" href="/activecover" passHref>
                     My Policy
                   </PoolButton>
@@ -85,7 +89,9 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalClaimValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined">Request Claim</PoolButton>
                 </PoolCardTopArea>
                 <PoolCardFooterArea>
@@ -96,7 +102,9 @@ const TopSection = () => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>0.0000 USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalMIValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined" href="/provider" passHref>
                     Become Provider
                   </PoolButton>

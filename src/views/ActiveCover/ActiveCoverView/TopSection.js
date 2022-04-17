@@ -4,6 +4,8 @@ import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import { styled } from "@mui/material/styles";
 
+import useGetTotalData from "../../../hooks/useGetTotalData";
+
 const PoolHeadArea = styled("div")(({ theme }) => ({
   height: "250px",
   width: "100%",
@@ -63,9 +65,9 @@ const PoolButton = styled(Button)(({ theme }) => ({
   color: "#ffff",
   [theme.breakpoints.down("sm")]: {},
 }));
-const TopSection = (props) => {
-  const { sumOfClaim, sumOfStake, sumOfPremium } = props;
-  console.log(sumOfPremium);
+const TopSection = () => {
+  const totalData = useGetTotalData();
+
   return (
     <>
       <PoolHeadArea>
@@ -74,7 +76,9 @@ const TopSection = (props) => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>{sumOfPremium} USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalPolicyValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined" href="/pool" passHref>
                     Get Insured
                   </PoolButton>
@@ -87,7 +91,9 @@ const TopSection = (props) => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>{sumOfClaim} USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalClaimValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined" href="/myclaim" passHref>
                     My Claims
                   </PoolButton>
@@ -100,7 +106,9 @@ const TopSection = (props) => {
             <Grid item xs={12} md={4}>
               <PoolCardArea>
                 <PoolCardTopArea>
-                  <PoolCardTopicText>{sumOfStake} USD</PoolCardTopicText>
+                  <PoolCardTopicText>
+                    {totalData.totalMIValue} USD
+                  </PoolCardTopicText>
                   <PoolButton variant="outlined" href="/provider" passHref>
                     Become Provider
                   </PoolButton>

@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { config } from "../config";
 
 const month = [
   "January",
@@ -21,61 +22,48 @@ const useGetClaim = (poolId) => {
 
   useEffect(() => {
     let arrayClaim = [];
-    let policyObj = {};
-    let sumOfClaim = 0;
-    let sumOfStake = 0;
-    let sumOfPremium = 0;
+    let index = 0;
     const funcGetClaim = async () => {
-      const { data } = await axios.post(
-        `http://188.166.247.236/api/listPolicy`,
-        { user: "0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF" }
-      );
+      const { data } = await axios.post(`${config.url}/listClaims`, {
+        user: "0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF",
+      });
       let filterData = data;
 
       if (poolId != undefined && poolId != "all") {
         filterData = data.filter((item) => item.poolId == poolId);
       }
-      const transFromFilter = filterData.map((item) => {
+      filterData.map((item) => {
         const transFromData = item.Data.map((data) => {
-          const startDate = new Date(data.startDate);
-          const endDate = new Date(data.untilDate);
+          const requestDate = new Date(data.timeOut);
 
-          const startPeriodDay = `${
-            month[startDate.getMonth()]
-          } ${startDate.getDate()},  ${startDate.getFullYear()}`;
-
-          const endPeriodDay = `${
-            month[endDate.getMonth()]
-          } ${endDate.getDate()},  ${endDate.getFullYear()}`;
+          const requestDay = `${
+            month[requestDate.getMonth()]
+          } ${requestDate.getDate()},  ${requestDate.getFullYear()}`;
+          index = index + 1;
 
           return {
-            policyId: data.policyId,
-            coverageName: item.coverageName,
-            coveragePeriod: `${startPeriodDay} - ${endPeriodDay}`,
-            premiumAmount: data.premiumAmount,
-            maxCoverage: data.maxCoverage,
-            totalClaimPaid: data.claimAmountPaid,
+            index: index,
+            claimId: data.claimId,
+            claimRequestDate: `${requestDay}`,
+            requestAmount: data.requestAmount,
+            approveAmount: data.approveAmount,
+            votePower: data.sumOfTheVote,
             status: data.status,
           };
         });
 
         arrayClaim.push(...transFromData);
-        sumOfClaim = sumOfClaim + item.allClaimAmountPaid;
-        sumOfStake = sumOfStake + item.MIStaking;
-        sumOfPremium = sumOfPremium + item.allPremiumAmount;
+
         return transFromData;
       });
 
-      policyObj.listData = arrayClaim;
-      policyObj.sumOfClaim = sumOfClaim;
-      policyObj.sumOfStake = sumOfStake;
-      policyObj.sumOfPremium = sumOfPremium;
-
-      setClaimData(policyObj);
+      setClaimData(arrayClaim);
     };
     funcGetClaim();
   }, []);
 
+  console.log("claimData::");
+  console.log(claimData);
   return claimData;
 };
 
