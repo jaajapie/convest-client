@@ -7,6 +7,7 @@ const moduleExports = {
     RPC_URL: process.env.RPC_URL,
     NETWORK_ID: process.env.NETWORK_ID,
     DAPP_ID: process.env.DAPP_ID,
+    API_UPLOAD_URL: process.env.API_UPLOAD_URL,
   },
   webpack: (config, { isServer }) => {
     if (!isServer) {

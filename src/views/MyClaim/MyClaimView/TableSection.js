@@ -155,8 +155,8 @@ export default function TableSection(props) {
                 ))}
               </Select>
             </FormControl>
-            <Button variant="contained" href="/pool">
-              Get Insured
+            <Button variant="contained" href="/claimrequest">
+              Request Claim
             </Button>
           </CoverToolbarArea>
         </Toolbar>

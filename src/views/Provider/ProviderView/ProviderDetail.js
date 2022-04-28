@@ -131,6 +131,7 @@ const ProviderDetail = ({
   providerId,
   currentPower,
   maxPower,
+  exchangeRateMIToken,
 }) => {
   const detailUrl = "/mining?id=" + Id + "&providerId=" + providerId;
 
@@ -147,7 +148,7 @@ const ProviderDetail = ({
 
         <ProviderDetailContentArea>
           <BoxMIToken>
-            <BoxMITokenValueText>15$ </BoxMITokenValueText>
+            <BoxMITokenValueText>{exchangeRateMIToken}$ </BoxMITokenValueText>
             <BoxMITokenUnitText> / MI Token</BoxMITokenUnitText>
           </BoxMIToken>
           <Box sx={{ flexGrow: 1 }}>
@@ -161,11 +162,14 @@ const ProviderDetail = ({
           </ProviderDetailContentValueArea>
         </ProviderDetailContentArea>
         <ProviderDetailFooterArea>
-          <Button variant="contained" size="large" href={detailUrl}>
+          {/* <Button variant="contained" size="large" href={detailUrl}>
             Stake
           </Button>
           <Button variant="contained" size="large" href="/swap">
             Swap
+          </Button> */}
+          <Button variant="contained" size="large" href="/swap">
+            Apply
           </Button>
         </ProviderDetailFooterArea>
       </ProviderCardInnerArea>

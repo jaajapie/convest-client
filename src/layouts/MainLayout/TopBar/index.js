@@ -220,7 +220,7 @@ const Topbar = () => {
               <Logo src="logo/logo-dark.png"></Logo>
             </Link>
 
-            <Link href="/" passHref>
+            <Link href="https://covest.finance" passHref>
               <StyleLink>Home</StyleLink>
             </Link>
             <Link href="/referral" passHref>
@@ -233,6 +233,9 @@ const Topbar = () => {
 
             <Link href="/provider" passHref>
               <StyleLink>Become Provider</StyleLink>
+            </Link>
+            <Link href="https://docs.covest.finance" passHref>
+              <StyleLink>Docs</StyleLink>
             </Link>
           </NavLeftArea>
           <NavRightArea>

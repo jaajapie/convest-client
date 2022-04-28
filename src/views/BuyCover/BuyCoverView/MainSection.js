@@ -11,6 +11,12 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
 import { useRouter } from "next/router";
+import { useConnectWallet, useSetChain, useWallets } from "@web3-onboard/react";
+import { ethers, ContractFactory } from "ethers";
+import Web3 from "web3";
+
+let provider;
+let web3;
 
 const BuyCoverArea = styled("div")(({ theme }) => ({
   marginTop: "2%",
@@ -28,11 +34,12 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const CreateTabBuyCover = () => {
+const CreateTabBuyCover = (props) => {
   const router = useRouter();
   const { poolId } = router.query;
+  const { account } = props;
 
-  const BuyCoverData = useBuyCover(poolId);
+  const BuyCoverData = useBuyCover(poolId, account);
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -50,10 +57,37 @@ const CreateTabBuyCover = () => {
 const MainContent = () => {
   const router = useRouter();
   const { poolId } = router.query;
-  if (poolId != undefined) {
+
+  const [account, setAccount] = React.useState("");
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+
+  async function GetAccount() {
+    const accountData = await web3?.eth?.getAccounts();
+
+    if (accountData != undefined && accountData.length > 0) {
+      setAccount(accountData[0]);
+    } else {
+      setAccount("xx");
+    }
+  }
+
+  useEffect(() => {
+    if (!wallet?.provider) {
+      provider = null;
+      web3 = null;
+    } else {
+      provider = new ethers.providers.Web3Provider(wallet.provider, "any");
+
+      web3 = new Web3(wallet.provider);
+    }
+
+    GetAccount();
+  }, [wallet]);
+
+  if (poolId != undefined && account != "xx") {
     return (
       <BuyCoverArea>
-        <CreateTabBuyCover></CreateTabBuyCover>
+        <CreateTabBuyCover account={account}></CreateTabBuyCover>
       </BuyCoverArea>
     );
   } else {

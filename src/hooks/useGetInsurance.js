@@ -17,6 +17,7 @@ const useGetInsurance = (id, providerValue) => {
               name: item.poolName,
               logoUrl: "",
               contractAddress: item.nameRegistry,
+              exchangeRateMIToken: (item.exchangeRateMIToken / 100).toFixed(2),
               currentPower: powerData?.CurrentPower.toFixed(2),
               maxPower: powerData?.MaxPower,
               percentPower: (
@@ -37,6 +38,7 @@ const useGetInsurance = (id, providerValue) => {
             name: item.poolName,
             logoUrl: "",
             contractAddress: item.nameRegistry,
+            exchangeRateMIToken: (item.exchangeRateMIToken / 100).toFixed(2),
             currentPower: powerData?.CurrentPower.toFixed(2),
             maxPower: powerData?.MaxPower,
             percentPower: (

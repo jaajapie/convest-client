@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
@@ -14,15 +14,22 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
-
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import { useTheme } from "@mui/material/styles";
 import DateAdapter from "@mui/lab/AdapterMoment";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
-import useGetPolicy from "../../../hooks/useGetPolicy";
+import useGetPolicyForDropdown from "../../../hooks/useGetPolicyForDropdown";
+import useRequestClaim from "../../../hooks/useRequestClaim";
 import axios from "axios";
+import { useConnectWallet, useSetChain, useWallets } from "@web3-onboard/react";
+import { ethers, ContractFactory } from "ethers";
+import Web3 from "web3";
+import moment from "moment";
+
+let provider;
+let web3;
 
 const ApplyArea = styled("div")(({ theme }) => ({
   marginTop: "5%",
@@ -142,6 +149,12 @@ const CheckBoxLabel = styled(FormControlLabel)(({ theme }) => ({
   paddingLeft: "25px",
 }));
 
+const SelectCurrency = styled(TextField)(({ theme }) => ({
+  marginTop: "8px",
+
+  [theme.breakpoints.down("sm")]: {},
+}));
+
 async function sendFiles(file) {
   let formData = new FormData();
 
@@ -171,42 +184,265 @@ async function sendObject(data) {
 
   return response.data;
 }
+function makeFileType(fileName) {
+  var parts = fileName.split(".");
+  return parts[parts.length - 1];
+}
+function getFileType(fileName) {
+  var ext = makeFileType(fileName);
+  switch (ext.toLowerCase()) {
+    case "jpg":
+      return "image";
+    case "jpeg":
+      return "image";
+    case "gif":
+      return "image";
+    case "bmp":
+      return "image";
+    case "png":
+      return "image";
+    case "m4v":
+      return "video";
+    case "avi":
+      return "video";
+    case "mpg":
+      return "video";
+    case "mp4":
+      return "video";
+    case "zip":
+      return "zip";
+    //etc
+  }
+  return "other";
+}
 
-const MainSection = () => {
-  const theme = useTheme();
-  const [poolId, setPoolId] = React.useState("all");
+const RenderAfterSectedPolicy = (props) => {
+  const { isSelectedPool, policyData, accountAddress } = props;
   const [lossEvent, setLossEvent] = React.useState(null);
   const [fileValue, setFileValue] = React.useState(null);
+
   const [values, setValues] = React.useState({
     lossEvent: "",
-    lossAmount: "",
-    claimAmount: "",
-    description: "",
-    topic: "",
+    lossAmount: "450",
+    claimAmount: "500",
+    description: "รายละเอียดการ request claim",
+    topic: "ทดสอบ request claim",
   });
 
-  const handleChange = (event) => {
-    setPoolId(event.target.value);
-  };
+  const today = moment();
+  const untilDate = moment(policyData.endPeriodDay);
   const handleEventChange = (event) => {
     setLossEvent(event.target.value);
   };
+
   const handleInputChange = (prop) => (event) => {
-    console.log(event);
-    setValues({ ...values, [prop]: event.target.value });
+    if (prop === "claimAmount") {
+      if (policyData.remainClaim >= event.target.value) {
+        setValues({ ...values, [prop]: event.target.value });
+      }
+    } else {
+      setValues({ ...values, [prop]: event.target.value });
+    }
   };
 
   const handleFileChange = async (event) => {
     if (event.target.files[0]) {
       setFileValue(event.target.files[0]);
-
-      // const res = await sendFiles(fileValue);
-      // console.log(res);
     }
-
-    // onChange(event);
   };
 
+  if (isSelectedPool == true) {
+    var end_date = today < untilDate ? today : untilDate.add("days", 0);
+    var start_date = moment(policyData.startPeriodDay).add("days", 1);
+
+    return (
+      <div>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={12}>
+            <TextFieldCustom
+              label="Topic"
+              placeholder="e. g. “0.00”"
+              variant="outlined"
+              value={values.topic}
+              onChange={handleInputChange("topic")}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={12}>
+            <TextFieldCustom
+              id="filled-multiline-flexible"
+              label="Description"
+              placeholder="e. g. “After purchasing the product you can get item...”"
+              multiline
+              rows={4}
+              variant="outlined"
+              value={values.description}
+              onChange={handleInputChange("description")}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6}>
+            <TextFieldCustom
+              label="Loss Amount"
+              placeholder="e. g. “0.00”"
+              variant="outlined"
+              value={values.lossAmount}
+              onChange={handleInputChange("lossAmount")}
+            />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <TextFieldCustom
+              label="Claim Amount"
+              placeholder="e. g. “0.00”"
+              variant="outlined"
+              value={values.claimAmount}
+              onChange={handleInputChange("claimAmount")}
+            />
+          </Grid>
+          <Grid item xs={12} md={12}>
+            <FormControl fullWidth>
+              <LocalizationProvider dateAdapter={DateAdapter}>
+                <DatePicker
+                  label="Loss Event Time"
+                  renderInput={(params) => <TextField {...params} />}
+                  value={lossEvent}
+                  onChange={(newValue) => {
+                    setLossEvent(newValue);
+                  }}
+                  minDate={start_date}
+                  maxDate={end_date}
+                />
+              </LocalizationProvider>
+            </FormControl>
+          </Grid>
+        </Grid>
+        <TitleRightArea>Reference Report:</TitleRightArea>
+        <LabelRightArea>Drag or choose your file to upload</LabelRightArea>
+        <BrowseFileArea>
+          <InputfileCustom
+            name="file"
+            id="file"
+            type="file"
+            data-multiple-caption="{count} files selected"
+            multiple=""
+            onChange={handleFileChange}
+          ></InputfileCustom>
+          <FileUploadLabel for="file" title="No File Choosen">
+            <CloudUploadIcon fontSize="large"></CloudUploadIcon>
+            <TextCenter>Choose a File</TextCenter>
+            <p>
+              <TextCenter>PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.</TextCenter>
+            </p>
+          </FileUploadLabel>
+        </BrowseFileArea>
+        <FormControl fullWidth>
+          <Grid item xs={12} md={12}>
+            <Stack spacing={2} direction="row">
+              <Button variant="contained">Preview</Button>
+              <Button
+                variant="contained"
+                onClick={() =>
+                  RequestClaim(
+                    values.topic,
+                    policyData,
+                    values.claimAmount,
+                    values.lossAmount,
+                    values.description,
+                    fileValue,
+                    accountAddress
+                  )
+                }
+              >
+                Submit Item
+              </Button>
+            </Stack>
+          </Grid>
+        </FormControl>
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
+};
+
+async function RequestClaim(
+  topic,
+  policyData,
+  amount,
+  lossAmount,
+  description,
+  file,
+  userAddress
+) {
+  const response = await useRequestClaim(
+    {
+      topic: topic,
+      amount: amount,
+      lossAmount: lossAmount,
+      description: description,
+      file: file,
+    },
+    policyData.policyId,
+    policyData.poolId,
+    policyData.coverageName,
+    userAddress,
+    policyData.assetAddress,
+    policyData.assetName,
+    web3
+  );
+  console.log(response);
+}
+
+async function GetPolicyData(account) {
+  let poolData = await useGetPolicyForDropdown(undefined, account);
+  if (!poolData?.message) {
+  } else {
+    return null;
+  }
+}
+
+const MainSection = () => {
+  const theme = useTheme();
+  const [isSelectedPool, setIsSelectedPool] = React.useState(false);
+  const [poolId, setPoolId] = React.useState("all");
+  const connectedWallets = useWallets();
+
+  const [account, setAccount] = React.useState(null);
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+
+  async function GetAccount() {
+    console.log("connectedWallets[0]:::");
+    console.log(connectedWallets[0]);
+    const accountData = await connectedWallets[0];
+
+    if (accountData != undefined) {
+      setAccount(accountData.accounts[0].address);
+      console.log(account);
+    }
+  }
+
+  useEffect(() => {
+    if (!wallet?.provider) {
+      provider = null;
+      web3 = null;
+    } else {
+      console.log("WALLET PROVIDER");
+      provider = new ethers.providers.Web3Provider(wallet.provider, "any");
+
+      web3 = new Web3(wallet.provider);
+    }
+  }, [wallet, account]);
+
+  GetAccount();
+
+  const handleChange = (event) => {
+    setPoolId(event.target.value);
+    if (poolId != "all") {
+      setIsSelectedPool(false);
+    } else {
+      setIsSelectedPool(true);
+    }
+  };
   function getStyles(name, poolId, theme) {
     return {
       fontWeight:
@@ -215,236 +451,77 @@ const MainSection = () => {
           : theme.typography.fontWeightMedium,
     };
   }
-  const poolData = useGetPolicy().listData;
-  if (poolData != undefined) {
+
+  let policyData = [];
+  console.log(`call Account`);
+  console.log(account);
+
+  const callDataPolicies = async () => {
+    let poolData = await GetPolicyData(account);
+    if (account && account.length === 42) {
+      //let poolData = GetPolicyData(account);
+      policyData = poolData;
+      if (poolId != "all" && poolData != null && poolData != undefined) {
+        policyData = poolData.filter((item) => item.poolId == poolId);
+      }
+    }
+  };
+
+  callDataPolicies();
+
+  console.log(policyData);
+
+  if (policyData != undefined && policyData.length > 0 && account !== "xxx") {
     return (
       <ApplyArea>
         <h4>Claim Request</h4>
         <Box sx={{ flexGrow: 1 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
-              <ApplyLeftArea>
-                {/* <H5Head>Bridge</H5Head>
-              <p>
-                <LinkText href="" passHref>
-                  My Transactions
-                </LinkText>
-              </p>
-              <p>
-                {" "}
-                <LinkText href="" passHref>
-                  All Transactions
-                </LinkText>
-              </p>
-              <p>
-                <LinkText href="" passHref>
-                  Proof of Assets
-                </LinkText>
-              </p>
-
-              <DetailText>
-                InsurAce.io Bridge provides bridge services, allowing users to
-                transfer $INSUR tokens across Ethereum, Binance Smart Chain,
-                Polygon and Avalanche. When using the bridge service, please
-                provide the correct wallet address to receive the tokens. We
-                will not be responsible for token loss due to the wrong wallet
-                address provided.To get started, please read User Guide.
-              </DetailText> */}
-              </ApplyLeftArea>
+              <ApplyLeftArea></ApplyLeftArea>
             </Grid>
             <Grid item xs={12} md={6}>
               <FormRightArea>
-                <TitleRightArea>Reference Report:</TitleRightArea>
-                <LabelRightArea>
-                  Drag or choose your file to upload
-                </LabelRightArea>
-                <BrowseFileArea>
-                  <InputfileCustom
-                    name="file"
-                    id="file"
-                    type="file"
-                    data-multiple-caption="{count} files selected"
-                    multiple=""
-                    onChange={handleFileChange}
-                  ></InputfileCustom>
-                  <FileUploadLabel for="file" title="No File Choosen">
-                    <CloudUploadIcon fontSize="large"></CloudUploadIcon>
-                    <TextCenter>Choose a File</TextCenter>
-                    <p>
-                      <TextCenter>
-                        PNG, GIF, WEBP, MP4 or MP3. Max 1Gb.
-                      </TextCenter>
-                    </p>
-                  </FileUploadLabel>
-                </BrowseFileArea>
-
-                <FormControl fullWidth>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={12}>
-                      <FormControl fullWidth>
-                        <LocalizationProvider dateAdapter={DateAdapter}>
-                          <DatePicker
-                            label="Loss Event Time"
-                            renderInput={(params) => <TextField {...params} />}
-                            value={lossEvent}
-                            onChange={(newValue) => {
-                              setLossEvent(newValue);
-                            }}
-                          />
-                        </LocalizationProvider>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <TextFieldCustom
-                        label="Loss Amount"
-                        placeholder="e. g. “0.00”"
-                        variant="outlined"
-                        value={values.lossAmount}
-                        onChange={handleInputChange("lossAmount")}
-                      />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextFieldCustom
-                        label="Claim Amount"
-                        placeholder="e. g. “0.00”"
-                        variant="outlined"
-                        value={values.claimAmount}
-                        onChange={handleInputChange("claimAmount")}
-                      />
-                    </Grid>
-                  </Grid>
-                  {/* <Grid container spacing={2}>
-                  <Grid item xs={12} md={6}>
-                    <DatePickerArea fullWidth>
-                      <LocalizationProvider dateAdapter={DateAdapter}>
-                        <DatePicker
-                          label="Cover StartDate"
-                          value={lossEvent}
-                          onChange={(newValue) => {
-                            setLossEvent(newValue);
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
-                    </DatePickerArea>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <DatePickerArea fullWidth>
-                      <LocalizationProvider dateAdapter={DateAdapter}>
-                        <DatePicker
-                          label="Cover EndDate"
-                          value={lossEvent}
-                          onChange={(newValue) => {
-                            setLossEvent(newValue);
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
-                    </DatePickerArea>
-                  </Grid>
-                </Grid> */}
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} md={12}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Cover
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={poolId}
-                          label="Cover"
-                          onChange={handleChange}
-                        >
-                          {poolData.map((pool) => (
-                            <MenuItem
-                              key={pool.poolId}
-                              value={pool.poolId}
-                              style={getStyles(
-                                pool.coverageName,
-                                poolId,
-                                theme
-                              )}
-                            >
-                              {pool.coverageName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid>
+                <Grid container spacing={2}>
                   <Grid item xs={12} md={12}>
-                    <TextFieldCustom
-                      label="Topic"
-                      placeholder="e. g. “0.00”"
-                      variant="outlined"
-                      value={values.topic}
-                      onChange={handleInputChange("topic")}
-                    />
-                  </Grid>
-                  {/* <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Protocol
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={poolId}
-                          label="Protocol"
-                          onChange={handleChange}
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Cover
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={poolId}
+                        label="Cover"
+                        onChange={handleChange}
+                      >
+                        <MenuItem
+                          key={0}
+                          value={"all"}
+                          style={getStyles("all", poolId, theme)}
                         >
-                          <MenuItem value={1}>Autofarm</MenuItem>
-                          <MenuItem value={2}>Manualfarm</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Cover Type
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={poolId}
-                          label="Cover Type"
-                          onChange={handleChange}
-                        >
-                          <MenuItem value={1}>
-                            Smart Contract Vulnerability
+                          All
+                        </MenuItem>
+                        {poolData.map((pool) => (
+                          <MenuItem
+                            key={pool.poolId}
+                            value={pool.poolId}
+                            style={getStyles(pool.coverageName, poolId, theme)}
+                            //disabled={pool.claimPending != 0 ? true : false}
+                          >
+                            {pool.coverageName}{" "}
+                            {pool.claimPending != 0 ? "[Pending]" : ""}
                           </MenuItem>
-                          <MenuItem value={2}>Manualfarm</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                  </Grid> */}
-
-                  <Grid item xs={12} md={12}>
-                    <TextFieldCustom
-                      id="filled-multiline-flexible"
-                      label="Description"
-                      placeholder="e. g. “After purchasing the product you can get item...”"
-                      multiline
-                      rows={4}
-                      variant="outlined"
-                      value={values.description}
-                      onChange={handleInputChange("description")}
-                    />
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Grid>
-
-                  <Grid item xs={12} md={12}>
-                    <Stack spacing={2} direction="row">
-                      <Button variant="contained">Preview</Button>
-                      <Button variant="contained" onClic>
-                        Submit Item
-                      </Button>
-                    </Stack>
-                  </Grid>
-                </FormControl>
+                </Grid>
+                <RenderAfterSectedPolicy
+                  isSelectedPool={isSelectedPool}
+                  policyData={policyData[0]}
+                  accountAddress={account}
+                ></RenderAfterSectedPolicy>
               </FormRightArea>
             </Grid>
           </Grid>

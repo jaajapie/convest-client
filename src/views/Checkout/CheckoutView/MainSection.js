@@ -242,8 +242,8 @@ async function buyPolicy(poolId, planId, referral, currency) {
     nameRegsitryAddress
   );
 
-  let referralAddress = await nameRegsitryContract?.methods?.Referral().call();
-  console.log(refferalAddress);
+  let referralAddress = await nameRegsitryContract.methods.RL().call();
+  console.log(referralAddress);
 
   console.log(policyManager);
   web3.eth.getChainId().then(console.log);
@@ -482,21 +482,9 @@ async function SendTranscation(
 }
 
 const RenderDetail = (paramValue) => {
-  const BuyCoverData = useBuyCover(paramValue.poolId);
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+  const { account } = paramValue;
+  const BuyCoverData = useBuyCover(paramValue.poolId, account);
 
-  useEffect(() => {
-    if (!wallet?.provider) {
-      provider = null;
-      web3 = null;
-    } else {
-      provider = new ethers.providers.Web3Provider(wallet.provider, "any");
-
-      web3 = new Web3(wallet.provider);
-    }
-  }, [wallet]);
-
-  console.log(BuyCoverData);
   const CoverDataByPlan = BuyCoverData.filter(
     (item) => item.planId == paramValue.planId
   );
@@ -760,8 +748,41 @@ const MainSection = () => {
   const router = useRouter();
   const { poolId, planId } = router.query;
 
-  if (poolId != undefined) {
-    return <RenderDetail poolId={poolId} planId={planId}></RenderDetail>;
+  const [account, setAccount] = React.useState("");
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+
+  async function GetAccount() {
+    const accountData = await web3?.eth?.getAccounts();
+
+    if (accountData != undefined && accountData.length > 0) {
+      setAccount(accountData[0]);
+    } else {
+      setAccount("xx");
+    }
+  }
+
+  useEffect(() => {
+    if (!wallet?.provider) {
+      provider = null;
+      web3 = null;
+    } else {
+      provider = new ethers.providers.Web3Provider(wallet.provider, "any");
+
+      web3 = new Web3(wallet.provider);
+    }
+
+    GetAccount();
+  }, [wallet]);
+
+  if ((poolId != undefined) & (account != undefined) && account != "xx") {
+    console.log(account);
+    return (
+      <RenderDetail
+        poolId={poolId}
+        planId={planId}
+        account={account}
+      ></RenderDetail>
+    );
   } else {
     return <div>No data</div>;
   }

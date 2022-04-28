@@ -79,6 +79,7 @@ const CreateProviderTabDetail = (provider) => {
             currentPower={insurance.currentPower}
             maxPower={insurance.maxPower}
             percentPower={insurance.percentPower}
+            exchangeRateMIToken={insurance.exchangeRateMIToken}
           ></ProviderDetail>
         </Grid>
       ))}

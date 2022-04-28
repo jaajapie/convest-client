@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { config } from "../config";
 
-const useBuyCover = (poolId) => {
+const useBuyCover = (poolId, accountAddress) => {
   const [poolData, setPoolData] = useState([]);
-  console.log("start useBuyCover");
-  console.log(poolId.poolId);
+
   useEffect(() => {
     const funcGetPool = async () => {
       const { data } = await axios.get(
-        `http://188.166.247.236/api/quotePlans?user=0x8c2D08a22144c1Ae2A9BD98717b0a05849f5DBDF`
+        `${config.url}/quotePlans?user=${accountAddress}`
       );
 
       if (poolId != undefined) {
